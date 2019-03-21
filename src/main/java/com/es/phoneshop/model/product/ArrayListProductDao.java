@@ -6,10 +6,16 @@ import java.util.stream.Collectors;
 
 public class ArrayListProductDao implements ProductDao {
 
+    private static final ProductDao INSTANCE = new ArrayListProductDao();
+
     private List<Product> products;
 
-    public ArrayListProductDao() {
+    private ArrayListProductDao() {
 	products = new ArrayList<>();
+    }
+
+    public static ProductDao getInstance() {
+	return INSTANCE;
     }
 
     @Override
