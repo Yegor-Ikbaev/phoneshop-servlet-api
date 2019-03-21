@@ -28,4 +28,9 @@
   <listener>
     <listener-class>com.es.phoneshop.web.listeners.ProductDemodataServletContextListener</listener-class>
   </listener>
+  
+  <error-page>
+    <exception-type>java.lang.IllegalArgumentException</exception-type>
+    <location>/WEB-INF/pages/exceptionPage.jsp</location>
+</error-page>
 </web-app>

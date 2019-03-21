@@ -24,7 +24,7 @@ public class ArrayListProductDao implements ProductDao {
 	return products.parallelStream()
     		       .filter((product) -> product.getId().equals(id))
     		       .findAny()
-    		       .orElseThrow(() -> new IllegalArgumentException("There is no product with such id"));
+    		       .orElseThrow(() -> new IllegalArgumentException("There is no product with id = " + id));
     }
 
     @Override
