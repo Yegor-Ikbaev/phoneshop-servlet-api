@@ -2,6 +2,7 @@ package com.es.phoneshop.model.product;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class ArrayListProductDao implements ProductDao {
@@ -31,6 +32,31 @@ public class ArrayListProductDao implements ProductDao {
 	return products.parallelStream()
 		       .filter((product) -> product.getPrice() != null && product.getStock() > 0)
 		       .collect(Collectors.toList());
+    }
+    
+    @Override
+    public synchronized List<Product> findProductsByDescription(String query) {
+	if (query != null && !query.isEmpty()) {
+	    String[] keyWords = query.split("\\s");
+	    return products.parallelStream()
+		           .filter((product) -> numberOfMatches(product, keyWords) > 0)
+		           .filter((product) -> product.getPrice() != null && product.getStock() > 0)
+		           .sorted((p1, p2) -> numberOfMatches(p2, keyWords) - numberOfMatches(p1, keyWords))
+		           .collect(Collectors.toList());
+	} else {
+	    return findProducts();
+	}
+    }
+    
+    private int numberOfMatches(Product product, String... keyWords) {
+	int result = 0;
+	for (String keyWord : keyWords) {
+	    Pattern pattern = Pattern.compile("\\b" + keyWord + "\\b", Pattern.CASE_INSENSITIVE);
+	    if (pattern.matcher(product.getDescription()).find()) {
+		result++;
+	    }
+	}
+	return result;
     }
 
     @Override
