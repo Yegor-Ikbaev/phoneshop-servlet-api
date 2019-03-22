@@ -34,13 +34,15 @@ public class ProductListPageServlet extends HttpServlet {
 	String sortParameter = request.getParameter("sortBy");
 	String order = request.getParameter("order");
 	List<Product> products = productDao.findProductsByDescription(searchParameter);
-	if ("description".equals(sortParameter)) {
-	    products.sort(Comparator.comparing(Product::getDescription));
+	if ("description".equalsIgnoreCase(sortParameter)) {
+	    products.parallelStream()
+	            .sorted(Comparator.comparing(Product::getDescription));
 	}
-	if ("price".equals(sortParameter)) {
-	    products.sort(Comparator.comparing(Product::getPrice));
+	if ("price".equalsIgnoreCase(sortParameter)) {
+	    products.parallelStream()
+	            .sorted(Comparator.comparing(Product::getPrice));
 	}
-	if ("desc".equals(order)) {
+	if ("desc".equalsIgnoreCase(order)) {
 	    Collections.reverse(products);
 	}
 	return products;

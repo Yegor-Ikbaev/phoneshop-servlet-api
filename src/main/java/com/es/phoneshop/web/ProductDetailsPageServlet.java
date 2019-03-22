@@ -25,7 +25,7 @@ public class ProductDetailsPageServlet extends HttpServlet {
 	request.setAttribute("product", productDao.getProduct(extractId(request)));
 	request.getRequestDispatcher("/WEB-INF/pages/productDetails.jsp").forward(request, response);
     }
-    
+
     private Long extractId(HttpServletRequest request) {
 	return Long.parseLong(request.getPathInfo().replaceAll("/", ""));
     }
