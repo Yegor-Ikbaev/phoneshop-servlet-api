@@ -61,6 +61,10 @@ public class ArrayListProductDao implements ProductDao {
 
     @Override
     public synchronized void save(Product product) throws IllegalArgumentException {
+	if(product == null || product.getId() == null) {
+	    throw new IllegalArgumentException("Product or product id can not be null");
+	}
+	
 	Product productWithSameId;
 	try {
 	    productWithSameId = getProduct(product.getId());
