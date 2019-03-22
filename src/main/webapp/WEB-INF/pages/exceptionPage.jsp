@@ -3,15 +3,6 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 
-<html>
-<head>
-  <title>${pageTitle}</title>
-  <link href='http://fonts.googleapis.com/css?family=Lobster+Two' rel='stylesheet' type='text/css'>
-  <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/styles/main.css">
-</head>
-<body>
-<tags:header/> 
-    <%out.print(request.getAttribute("javax.servlet.error.message"));%>
-<tags:footer/> 
-</body>
-</html>
+<tags:master pageTitle="Exception page">
+    ${requestScope['javax.servlet.error.message']}
+</tags:master>

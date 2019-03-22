@@ -6,8 +6,6 @@
 <jsp:useBean id="products" type="java.util.ArrayList" scope="request"/>
 
 <tags:master pageTitle="Product List">
-<tags:header/>  
-
   <form action="">
   	<input name="search" value="${param.search}"/>
   	 <button type="submit">Search</button>
@@ -42,5 +40,4 @@
       </tr>
     </c:forEach>
   </table>
-  <tags:footer/>  
 </tags:master>

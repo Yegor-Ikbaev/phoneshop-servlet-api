@@ -17,69 +17,97 @@ public class Product {
     public Product() {
     }
 
-    public Product(Long id, String code, String description, BigDecimal price, Currency currency, int stock, String imageUrl) {
-        this.id = id;
-        this.code = code;
-        this.description = description;
-        this.price = price;
-        this.currency = currency;
-        this.stock = stock;
-        this.imageUrl = imageUrl;
+    public Product(Long id, String code, String description, BigDecimal price, Currency currency, int stock,
+	    String imageUrl) {
+	this.id = id;
+	this.code = code;
+	this.description = description;
+	this.price = price;
+	this.currency = currency;
+	this.stock = stock;
+	this.imageUrl = imageUrl;
     }
 
     public Long getId() {
-        return id;
+	return id;
     }
 
     public void setId(Long id) {
-        this.id = id;
+	this.id = id;
     }
 
     public String getCode() {
-        return code;
+	return code;
     }
 
     public void setCode(String code) {
-        this.code = code;
+	this.code = code;
     }
 
     public String getDescription() {
-        return description;
+	return description;
     }
 
     public void setDescription(String description) {
-        this.description = description;
+	this.description = description;
     }
 
     public BigDecimal getPrice() {
-        return price;
+	return price;
     }
 
     public void setPrice(BigDecimal price) {
-        this.price = price;
+	this.price = price;
     }
 
     public Currency getCurrency() {
-        return currency;
+	return currency;
     }
 
     public void setCurrency(Currency currency) {
-        this.currency = currency;
+	this.currency = currency;
     }
 
     public int getStock() {
-        return stock;
+	return stock;
     }
 
     public void setStock(int stock) {
-        this.stock = stock;
+	this.stock = stock;
     }
 
     public String getImageUrl() {
-        return imageUrl;
+	return imageUrl;
     }
 
     public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+	this.imageUrl = imageUrl;
+    }
+
+    @Override
+    public int hashCode() {
+	final int prime = 31;
+	int result = 1;
+	result = prime * result + ((id == null) ? 0 : id.hashCode());
+	return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+	if (this == obj) {
+	    return true;
+	}
+	if (obj == null) {
+	    return false;
+	}
+	if (getClass() != obj.getClass()) {
+	    return false;
+	}
+	Product other = (Product) obj;
+	if (id == null) {
+	    return other.id == null;
+	} else {
+	    return id.equals(other.id);
+	}
     }
 }

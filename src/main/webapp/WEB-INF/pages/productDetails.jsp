@@ -4,8 +4,6 @@
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 
 <tags:master pageTitle="Product List">
-<tags:header/>  
-
   <table>
     <thead>
       <tr>
@@ -22,6 +20,4 @@
         <td>${product.stock}</td>
       </tr>
   </table>
-  
-  <tags:footer/> 
 </tags:master>

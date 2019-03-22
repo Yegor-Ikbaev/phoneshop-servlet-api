@@ -1,7 +1,9 @@
 package com.es.phoneshop.model.product;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -22,7 +24,7 @@ public class ArrayListProductDao implements ProductDao {
     @Override
     public synchronized Product getProduct(Long id) throws IllegalArgumentException {
 	return products.parallelStream()
-    		       .filter((product) -> product.getId().equals(id))
+    		       .filter(product -> product.getId().equals(id))
     		       .findAny()
     		       .orElseThrow(() -> new IllegalArgumentException("There is no product with id = " + id));
     }
@@ -30,28 +32,30 @@ public class ArrayListProductDao implements ProductDao {
     @Override
     public synchronized List<Product> findProducts() {
 	return products.parallelStream()
-		       .filter((product) -> product.getPrice() != null && product.getStock() > 0)
+		       .filter(product -> product.getPrice() != null && product.getStock() > 0)
 		       .collect(Collectors.toList());
     }
     
     @Override
     public synchronized List<Product> findProductsByDescription(String query) {
-	if (query != null && !query.isEmpty()) {
-	    String[] keyWords = query.split("\\s");
-	    return products.parallelStream()
-		           .filter((product) -> numberOfMatches(product, keyWords) > 0)
-		           .filter((product) -> product.getPrice() != null && product.getStock() > 0)
-		           .sorted((p1, p2) -> numberOfMatches(p2, keyWords) - numberOfMatches(p1, keyWords))
-		           .collect(Collectors.toList());
-	} else {
-	    return findProducts();
-	}
+	String[] keyWords = query.split("\\s");
+	Map<Product, Integer> mapOfMatches = new HashMap<>();
+	products.parallelStream()
+		.forEach(product -> {
+		    int numberOfMatches = numberOfMatches(product, keyWords);
+		    if (numberOfMatches > 0 && product.getPrice() != null && product.getStock() > 0) {
+			mapOfMatches.put(product, numberOfMatches);
+		    }
+		});
+	return mapOfMatches.keySet().parallelStream()
+		                    .sorted((p1, p2) -> mapOfMatches.get(p2) - mapOfMatches.get(p1))
+		                    .collect(Collectors.toList());
     }
     
     private int numberOfMatches(Product product, String... keyWords) {
 	int result = 0;
 	for (String keyWord : keyWords) {
-	    Pattern pattern = Pattern.compile("\\b" + keyWord + "\\b", Pattern.CASE_INSENSITIVE);
+	    Pattern pattern = Pattern.compile(keyWord, Pattern.CASE_INSENSITIVE);
 	    if (pattern.matcher(product.getDescription()).find()) {
 		result++;
 	    }
