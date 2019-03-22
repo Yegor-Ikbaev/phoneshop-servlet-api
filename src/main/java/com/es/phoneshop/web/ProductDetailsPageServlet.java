@@ -16,17 +16,17 @@ public class ProductDetailsPageServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-	productDao = ArrayListProductDao.getInstance();
+        productDao = ArrayListProductDao.getInstance();
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-	    throws ServletException, IOException {
-	request.setAttribute("product", productDao.getProduct(extractId(request)));
-	request.getRequestDispatcher("/WEB-INF/pages/productDetails.jsp").forward(request, response);
+            throws ServletException, IOException {
+        request.setAttribute("product", productDao.getProduct(extractId(request)));
+        request.getRequestDispatcher("/WEB-INF/pages/productDetails.jsp").forward(request, response);
     }
 
     private Long extractId(HttpServletRequest request) {
-	return Long.parseLong(request.getPathInfo().replaceAll("/", ""));
+        return Long.parseLong(request.getPathInfo().replaceAll("/", ""));
     }
 }

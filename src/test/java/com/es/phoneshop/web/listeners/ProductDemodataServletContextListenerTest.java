@@ -7,17 +7,17 @@ import javax.servlet.ServletException;
 import java.io.IOException;
 
 public class ProductDemodataServletContextListenerTest {
-    
+
     private ProductDemodataServletContextListener listener;
 
     @Before
     public void setup() {
-	listener = new ProductDemodataServletContextListener();
+        listener = new ProductDemodataServletContextListener();
     }
 
     @Test
     public void testDoGet() throws ServletException, IOException {
-	listener.contextInitialized(null);
-	listener.contextDestroyed(null);
+        listener.contextInitialized(null);
+        listener.contextDestroyed(null);
     }
 }

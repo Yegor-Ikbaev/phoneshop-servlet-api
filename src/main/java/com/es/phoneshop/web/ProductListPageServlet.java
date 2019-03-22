@@ -20,39 +20,37 @@ public class ProductListPageServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-	productDao = ArrayListProductDao.getInstance();
+        productDao = ArrayListProductDao.getInstance();
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-	    throws ServletException, IOException {
-	request.setAttribute("products", getFilteredProducts(request));
-	request.getRequestDispatcher("/WEB-INF/pages/productList.jsp").forward(request, response);
+            throws ServletException, IOException {
+        request.setAttribute("products", getFilteredProducts(request));
+        request.getRequestDispatcher("/WEB-INF/pages/productList.jsp").forward(request, response);
     }
 
     private List<Product> getFilteredProducts(HttpServletRequest request) {
-	String searchParameter = request.getParameter("search");
-	String sortParameter = request.getParameter("sortBy");
-	String order = request.getParameter("order");
-	List<Product> products;
-	if (searchParameter != null && !searchParameter.isEmpty()) {
-	    products = productDao.findProductsByDescription(searchParameter);
-	} else {
-	    products = productDao.findProducts();
-	}
-	if ("description".equalsIgnoreCase(sortParameter)) {
-	    products = products.parallelStream()
-	                       .sorted(Comparator.comparing(Product::getDescription))
-	                       .collect(Collectors.toList());
-	}
-	if ("price".equalsIgnoreCase(sortParameter)) {
-	    products = products.parallelStream()
-                               .sorted(Comparator.comparing(Product::getPrice))
-                               .collect(Collectors.toList());
-	}
-	if ("desc".equalsIgnoreCase(order)) {
-	    Collections.reverse(products);
-	}
-	return products;
+        String searchParameter = request.getParameter("search");
+        String sortParameter = request.getParameter("sortBy");
+        String order = request.getParameter("order");
+        List<Product> products;
+        if (searchParameter != null && !searchParameter.isEmpty()) {
+            products = productDao.findProductsByDescription(searchParameter);
+        } else {
+            products = productDao.findProducts();
+        }
+        if ("description".equalsIgnoreCase(sortParameter)) {
+            products = products.parallelStream().sorted(Comparator.comparing(Product::getDescription))
+                    .collect(Collectors.toList());
+        }
+        if ("price".equalsIgnoreCase(sortParameter)) {
+            products = products.parallelStream().sorted(Comparator.comparing(Product::getPrice))
+                    .collect(Collectors.toList());
+        }
+        if ("desc".equalsIgnoreCase(order)) {
+            Collections.reverse(products);
+        }
+        return products;
     }
 }
