@@ -40,14 +40,14 @@ public class ArrayListProductDao implements ProductDao {
     public synchronized List<Product> findProductsByDescription(String query) {
 	String[] keyWords = query.split("\\s");
 	Map<Product, Integer> mapOfMatches = new HashMap<>();
-	products.parallelStream()
+	products.stream()
 		.forEach(product -> {
 		    int numberOfMatches = numberOfMatches(product, keyWords);
 		    if (numberOfMatches > 0 && product.getPrice() != null && product.getStock() > 0) {
 			mapOfMatches.put(product, numberOfMatches);
 		    }
 		});
-	return mapOfMatches.keySet().parallelStream()
+	return mapOfMatches.keySet().stream()
 		                    .sorted((p1, p2) -> mapOfMatches.get(p2) - mapOfMatches.get(p1))
 		                    .collect(Collectors.toList());
     }

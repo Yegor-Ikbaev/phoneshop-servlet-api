@@ -32,7 +32,7 @@ public class ProductListPageServletTest {
 	servlet = new ProductListPageServlet();
 	when(request.getRequestDispatcher(anyString())).thenReturn(requestDispatcher);
 	when(request.getParameter("search")).thenReturn("Samsung");
-	when(request.getParameter("desc")).thenReturn("desc");
+	when(request.getParameter("order")).thenReturn("desc");
     }
 
     @Test
