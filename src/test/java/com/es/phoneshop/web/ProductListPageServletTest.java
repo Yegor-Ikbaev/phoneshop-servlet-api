@@ -31,10 +31,21 @@ public class ProductListPageServletTest {
     public void setup() {
 	servlet = new ProductListPageServlet();
 	when(request.getRequestDispatcher(anyString())).thenReturn(requestDispatcher);
+	when(request.getParameter("search")).thenReturn("Samsung");
+	when(request.getParameter("desc")).thenReturn("desc");
     }
 
     @Test
-    public void testDoGet() throws ServletException, IOException {
+    public void testDoGetSortByDescription() throws ServletException, IOException {
+	when(request.getParameter("sortBy")).thenReturn("description");
+	servlet.init();
+	servlet.doGet(request, response);
+	verify(requestDispatcher).forward(request, response);
+    }
+
+    @Test
+    public void testDoGetSortByPrice() throws ServletException, IOException {
+	when(request.getParameter("sortBy")).thenReturn("price");
 	servlet.init();
 	servlet.doGet(request, response);
 	verify(requestDispatcher).forward(request, response);
