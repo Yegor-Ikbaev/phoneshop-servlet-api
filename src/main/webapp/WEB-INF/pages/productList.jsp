@@ -13,16 +13,16 @@
   <table>
     <thead>
       <tr>
-        <td>Image</td>
         <td>
-        Description
-        <a href="products?search=${param.search}&sortBy=description&order=asc">&uarr;</a>
-        <a href="products?search=${param.search}&sortBy=description&order=desc">&darr;</a>
+        	Image
         </td>
-        <td class="">
-        Price
-        <a href="products?search=${param.search}&sortBy=price&order=asc">&uarr;</a>
-        <a href="products?search=${param.search}&sortBy=price&order=desc">&darr;</a>
+        <td>
+	        Description
+	        <tags:sort search="${param.search}" sortBy="description"/>
+        </td>
+        <td>
+        	Price
+	        <tags:sort search="${param.search}" sortBy="price"/>
         </td>
       </tr>
     </thead>
