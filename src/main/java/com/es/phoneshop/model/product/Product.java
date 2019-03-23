@@ -4,20 +4,28 @@ import java.math.BigDecimal;
 import java.util.Currency;
 
 public class Product {
+    
     private Long id;
+    
     private String code;
+    
     private String description;
+    
     /** null means there is no price because the product is outdated or new */
     private BigDecimal price;
+    
     /** can be null if the price is null */
     private Currency currency;
+    
     private int stock;
+    
     private String imageUrl;
 
     public Product() {
     }
 
-    public Product(Long id, String code, String description, BigDecimal price, Currency currency, int stock, String imageUrl) {
+    public Product(Long id, String code, String description, BigDecimal price, Currency currency, int stock,
+            String imageUrl) {
         this.id = id;
         this.code = code;
         this.description = description;
@@ -81,5 +89,32 @@ public class Product {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        Product other = (Product) obj;
+        if (id == null) {
+            return other.id == null;
+        } else {
+            return id.equals(other.id);
+        }
     }
 }

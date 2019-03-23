@@ -29,14 +29,25 @@ public class ProductListPageServletTest {
 
     @Before
     public void setup() {
-	servlet = new ProductListPageServlet();
-	when(request.getRequestDispatcher(anyString())).thenReturn(requestDispatcher);
+        servlet = new ProductListPageServlet();
+        when(request.getRequestDispatcher(anyString())).thenReturn(requestDispatcher);
+        when(request.getParameter("search")).thenReturn("Samsung");
+        when(request.getParameter("order")).thenReturn("desc");
     }
 
     @Test
-    public void testDoGet() throws ServletException, IOException {
-	servlet.init();
-	servlet.doGet(request, response);
-	verify(requestDispatcher).forward(request, response);
+    public void testDoGetSortByDescription() throws ServletException, IOException {
+        when(request.getParameter("sortBy")).thenReturn("description");
+        servlet.init();
+        servlet.doGet(request, response);
+        verify(requestDispatcher).forward(request, response);
+    }
+
+    @Test
+    public void testDoGetSortByPrice() throws ServletException, IOException {
+        when(request.getParameter("sortBy")).thenReturn("price");
+        servlet.init();
+        servlet.doGet(request, response);
+        verify(requestDispatcher).forward(request, response);
     }
 }
