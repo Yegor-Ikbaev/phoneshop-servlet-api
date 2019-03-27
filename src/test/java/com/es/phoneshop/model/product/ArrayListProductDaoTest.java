@@ -13,7 +13,7 @@ import java.util.List;
 
 public class ArrayListProductDaoTest {
 
-    private final Long ID = 1L;
+    private static final Long ID = 1L;
 
     private Product product;
 
@@ -30,7 +30,7 @@ public class ArrayListProductDaoTest {
     public void destroy() {
         product.setPrice(new BigDecimal(1));
         product.setStock(1);
-        productDao.findProducts().forEach((product) -> productDao.delete(product.getId()));
+        productDao.findProducts().forEach(product -> productDao.delete(product.getId()));
     }
 
     @Test

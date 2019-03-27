@@ -29,10 +29,12 @@
     <c:forEach var="product" items="${products}">
       <tr>
         <td>
-          <img class="product-tile" src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${product.imageUrl}">
+          <c:url value="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${product.imageUrl}" var="imageUrl"/>
+          <img class="product-tile" src="${imageUrl}">
         </td>
         <td>
-        <a href="products/${product.id}">${product.description}</a>
+        <c:url value="/products/${product.id}" var="productId"/>
+        <a href="${productId}">${product.description}</a>
         </td>
         <td class="price">
           <fmt:formatNumber value="${product.price}" type="currency" currencySymbol="${product.currency.symbol}"/>
