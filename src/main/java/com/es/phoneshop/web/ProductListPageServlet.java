@@ -29,7 +29,14 @@ public class ProductListPageServlet extends HttpServlet {
     }
 
     private List<Product> getFilteredProducts(HttpServletRequest request) {
-        List<Product> products = productDao.findProductsByDescription(request.getParameter("search"));
+        String searchValue = request.getParameter("search");
+        List<Product> products;
+        if (searchValue != null && !searchValue.isEmpty()) {
+            products = productDao.findProductsByDescription(searchValue);
+        } else {
+            products = productDao.findProducts();
+        }
+
         String sortParameter = request.getParameter("sortBy");
         if (sortParameter != null) {
             products = productDao.sort(products, sortParameter, request.getParameter("order"));
