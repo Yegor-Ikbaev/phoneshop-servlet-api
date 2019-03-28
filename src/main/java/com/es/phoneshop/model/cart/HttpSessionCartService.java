@@ -14,7 +14,7 @@ public class HttpSessionCartService implements CartService {
     private HttpSessionCartService() {
     }
 
-    public CartService getInstance() {
+    public static CartService getInstance() {
         return INSTANCE;
     }
 
@@ -34,18 +34,19 @@ public class HttpSessionCartService implements CartService {
         if (product.getStock() < quantity) {
             throw new LackOfStockException("There is only " + product.getStock() + " products");
         }
-        if (quantity < 1) {
-            throw new IllegalArgumentException("Quantity should be greater than 1");
-        }
-        CartItem cartItem = cart.getCartItems().stream()
-                .filter(item -> item.getProduct().equals(product))
-                .findAny()
-                .orElse(null);
+        CartItem cartItem = findCartItem(cart, product);
         if (cartItem == null) {
             cart.getCartItems().add(new CartItem(product, quantity));
         } else {
             update(cartItem, quantity);
         }
+    }
+
+    private CartItem findCartItem(Cart cart, Product product) {
+        return cart.getCartItems().stream()
+                .filter(item -> item.getProduct().equals(product))
+                .findAny()
+                .orElse(null);
     }
 
     private void update(CartItem cartItem, int quantity) throws LackOfStockException {
