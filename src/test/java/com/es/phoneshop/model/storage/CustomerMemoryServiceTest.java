@@ -24,14 +24,16 @@ public class CustomerMemoryServiceTest {
     @Mock
     private Product product;
 
+    private Storage storage;
+
     @Before
     public void setup() {
         customerMemoryService = HttpSessionCustomerMemory.getInstance();
+        storage = new Storage();
     }
 
     @Test
     public void testGetExistingStorage() {
-        Storage storage = new Storage();
         when(httpSession.getAttribute(anyString())).thenReturn(storage);
         assertEquals(storage, customerMemoryService.getStorageFromSource(httpSession));
     }
@@ -43,14 +45,12 @@ public class CustomerMemoryServiceTest {
 
     @Test
     public void testUpdateWithoutExistingProduct() {
-        Storage storage = new Storage();
         customerMemoryService.update(storage, product);
         assertTrue(storage.getViewedProducts().contains(product));
     }
 
     @Test
     public void testUpdateWithExistingProduct() {
-        Storage storage = new Storage();
         customerMemoryService.update(storage, product);
         customerMemoryService.update(storage, product);
         assertEquals(1, storage.getViewedProducts().size());
@@ -58,7 +58,6 @@ public class CustomerMemoryServiceTest {
 
     @Test
     public void testGetRecentlyViewedProducts() {
-        Storage storage = new Storage();
         customerMemoryService.update(storage, product);
         assertTrue(!customerMemoryService.getRecentlyViewedProducts(storage).isEmpty());
     }
