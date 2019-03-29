@@ -14,6 +14,9 @@ import com.es.phoneshop.model.exception.LackOfStockException;
 import com.es.phoneshop.model.product.ArrayListProductDao;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.ProductDao;
+import com.es.phoneshop.model.storage.CustomerMemoryService;
+import com.es.phoneshop.model.storage.HttpSessionCustomerMemory;
+import com.es.phoneshop.model.storage.Storage;
 
 public class ProductDetailsPageServlet extends HttpServlet {
 
@@ -21,16 +24,23 @@ public class ProductDetailsPageServlet extends HttpServlet {
 
     private CartService cartService;
 
+    private CustomerMemoryService customerMemoryService;
+
     @Override
     public void init() {
         productDao = ArrayListProductDao.getInstance();
         cartService = HttpSessionCartService.getInstance();
+        customerMemoryService = HttpSessionCustomerMemory.getInstance();
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.setAttribute("product", productDao.getProduct(extractId(request)));
+        Product product = productDao.getProduct(extractId(request));
+        Storage storage = customerMemoryService.getStorageFromSource(request.getSession());
+        request.setAttribute("product", product);
+        request.setAttribute("recentlyViewedProducts", customerMemoryService.getRecentlyViewedProducts(storage));
+        customerMemoryService.update(storage, product);
         request.getRequestDispatcher("/WEB-INF/pages/productDetails.jsp").forward(request, response);
     }
 

@@ -41,4 +41,24 @@
         </form>
     </p>
 
+    <c:if test="${not empty recentlyViewedProducts}">
+        <p>
+        <h3>Recently viewed products</h3>
+        <table>
+            <tr>
+                <c:forEach var="product" items="${recentlyViewedProducts}">
+                    <td class="price" style="text-align: center">
+                        <c:url value="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${product.imageUrl}" var="imageUrl"/>
+                        <img class="product-tile" src="${imageUrl}">
+                        <br>
+                        <c:url value="/products/${product.id}" var="productId"/>
+                        <a href="${productId}">${product.description}</a>
+                        <br>
+                        <fmt:formatNumber value="${product.price}" type="currency" currencySymbol="${product.currency.symbol}"/>
+                    </td>
+                </c:forEach>
+            </tr>
+        </table>
+    </p>
+    </c:if>
 </tags:master>
