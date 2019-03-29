@@ -1,5 +1,6 @@
 package com.es.phoneshop.model.product;
 
+import com.es.phoneshop.model.exception.ProductNotFoundException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -68,7 +69,7 @@ public class ArrayListProductDaoTest {
         assertEquals(ID, productDao.getProduct(ID).getId());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = ProductNotFoundException.class)
     public void testGetProductByIdNoResult() {
         productDao.getProduct(ID);
     }
@@ -80,7 +81,7 @@ public class ArrayListProductDaoTest {
         assertTrue(productDao.findProducts().isEmpty());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = ProductNotFoundException.class)
     public void testDeleteProductNoSuchProduct() {
         productDao.delete(ID);
     }

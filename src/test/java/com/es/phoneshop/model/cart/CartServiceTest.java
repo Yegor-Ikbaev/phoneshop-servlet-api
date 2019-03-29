@@ -34,14 +34,14 @@ public class CartServiceTest {
     }
 
     @Test
-    public void testGetExistedCart() {
+    public void testGetExistingCart() {
         Cart cart = new Cart();
         when(httpSession.getAttribute(anyString())).thenReturn(cart);
         assertEquals(cart, cartService.getCartFromSource(httpSession));
     }
 
     @Test
-    public void testGetNotExistedCart() {
+    public void testGetNotExistingCart() {
         assertNotNull(cartService.getCartFromSource(httpSession));
     }
 
