@@ -1,5 +1,7 @@
 package com.es.phoneshop.model.product;
 
+import com.es.phoneshop.model.exception.ProductNotFoundException;
+
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -28,7 +30,7 @@ public class ArrayListProductDao implements ProductDao {
         return products.parallelStream()
                 .filter(product -> product.getId().equals(id))
                 .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("There is no product with id = " + id));
+                .orElseThrow(() -> new ProductNotFoundException("There is no product with id = " + id));
     }
 
     @Override
@@ -47,7 +49,7 @@ public class ArrayListProductDao implements ProductDao {
         Product productWithSameId;
         try {
             productWithSameId = getProduct(product.getId());
-        } catch (IllegalArgumentException exception) {
+        } catch (ProductNotFoundException exception) {
             productWithSameId = null;
         }
 
