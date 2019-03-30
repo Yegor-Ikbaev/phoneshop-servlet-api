@@ -14,8 +14,7 @@
       </tr>
     </thead>
     <tr>
-        <c:url value="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${product.imageUrl}" var="imageUrl"/>
-      	<td><img class="product-tile" src="${imageUrl}"></td>
+      	<td><img class="product-tile" src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${product.imageUrl}"></td>
         <td>${product.description}</td>
         <td class="price">
             <fmt:formatNumber value="${product.price}" type="currency" currencySymbol="${product.currency.symbol}"/>
@@ -48,8 +47,7 @@
             <tr>
                 <c:forEach var="product" items="${recentlyViewedProducts}">
                     <td class="price" style="text-align: center">
-                        <c:url value="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${product.imageUrl}" var="imageUrl"/>
-                        <img class="product-tile" src="${imageUrl}">
+                        <img class="product-tile" src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${product.imageUrl}">
                         <br>
                         <c:url value="/products/${product.id}" var="productId"/>
                         <a href="${productId}">${product.description}</a>
@@ -61,4 +59,5 @@
         </table>
     </p>
     </c:if>
+
 </tags:master>

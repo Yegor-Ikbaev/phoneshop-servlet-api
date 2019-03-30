@@ -2,11 +2,12 @@ package com.es.phoneshop.model.storage;
 
 import com.es.phoneshop.model.product.Product;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 public interface CustomerMemoryService {
 
-    Storage getStorageFromSource(Object source);
+    Storage getStorage(HttpSession httpSession);
 
     void update(Storage storage, Product product);
 

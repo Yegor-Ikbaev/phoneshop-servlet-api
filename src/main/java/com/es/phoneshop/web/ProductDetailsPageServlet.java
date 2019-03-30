@@ -37,7 +37,7 @@ public class ProductDetailsPageServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         Product product = productDao.getProduct(extractId(request));
-        Storage storage = customerMemoryService.getStorageFromSource(request.getSession());
+        Storage storage = customerMemoryService.getStorage(request.getSession());
         request.setAttribute("product", product);
         request.setAttribute("recentlyViewedProducts", customerMemoryService.getRecentlyViewedProducts(storage));
         customerMemoryService.update(storage, product);
@@ -74,7 +74,7 @@ public class ProductDetailsPageServlet extends HttpServlet {
 
     private void updateCart(HttpServletRequest request, int quantity) throws LackOfStockException {
         Product product = productDao.getProduct(extractId(request));
-        Cart cart = cartService.getCartFromSource(request.getSession());
+        Cart cart = cartService.getCart(request.getSession());
         cartService.add(cart, product, quantity);
     }
 

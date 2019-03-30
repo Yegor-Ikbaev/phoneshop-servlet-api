@@ -21,12 +21,11 @@ public class HttpSessionCustomerMemory implements CustomerMemoryService {
     }
 
     @Override
-    public Storage getStorageFromSource(Object source) {
-        HttpSession session = (HttpSession) source;
-        Storage storage = (Storage) session.getAttribute(STORAGE_ATTRIBUTE);
+    public Storage getStorage(HttpSession httpSession) {
+        Storage storage = (Storage) httpSession.getAttribute(STORAGE_ATTRIBUTE);
         if (storage == null) {
             storage = new Storage();
-            session.setAttribute(STORAGE_ATTRIBUTE, storage);
+            httpSession.setAttribute(STORAGE_ATTRIBUTE, storage);
         }
         return storage;
     }

@@ -35,12 +35,12 @@ public class CustomerMemoryServiceTest {
     @Test
     public void testGetExistingStorage() {
         when(httpSession.getAttribute(anyString())).thenReturn(storage);
-        assertEquals(storage, customerMemoryService.getStorageFromSource(httpSession));
+        assertEquals(storage, customerMemoryService.getStorage(httpSession));
     }
 
     @Test
     public void testGetNotExistingStorage() {
-        assertNotNull(customerMemoryService.getStorageFromSource(httpSession));
+        assertNotNull(customerMemoryService.getStorage(httpSession));
     }
 
     @Test

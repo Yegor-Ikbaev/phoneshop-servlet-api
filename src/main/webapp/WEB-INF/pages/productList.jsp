@@ -29,8 +29,7 @@
     <c:forEach var="product" items="${products}">
       <tr>
         <td>
-          <c:url value="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${product.imageUrl}" var="imageUrl"/>
-          <img class="product-tile" src="${imageUrl}">
+          <img class="product-tile" src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${product.imageUrl}">
         </td>
         <td>
         <c:url value="/products/${product.id}" var="productId"/>

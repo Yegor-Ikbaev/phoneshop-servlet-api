@@ -4,6 +4,7 @@ import com.es.phoneshop.model.exception.LackOfStockException;
 import com.es.phoneshop.model.product.Product;
 
 import javax.servlet.http.HttpSession;
+import java.util.Optional;
 
 public class HttpSessionCartService implements CartService {
 
@@ -19,42 +20,41 @@ public class HttpSessionCartService implements CartService {
     }
 
     @Override
-    public Cart getCartFromSource(Object source) {
-        HttpSession session = (HttpSession) source;
-        Cart cart = (Cart) session.getAttribute(CART_ATTRIBUTE);
+    public Cart getCart(HttpSession httpSession) {
+        Cart cart = (Cart) httpSession.getAttribute(CART_ATTRIBUTE);
         if (cart == null) {
             cart = new Cart();
-            session.setAttribute(CART_ATTRIBUTE, cart);
+            httpSession.setAttribute(CART_ATTRIBUTE, cart);
         }
         return cart;
     }
 
     @Override
     public void add(Cart cart, Product product, int quantity) throws LackOfStockException {
-        if (product.getStock() < quantity) {
-            throw new LackOfStockException("There is only " + product.getStock() + " products");
-        }
-        CartItem cartItem = findCartItem(cart, product);
-        if (cartItem == null) {
-            cart.getCartItems().add(new CartItem(product, quantity));
+        Optional<CartItem> optionalCartItem = findCartItem(cart, product);
+        CartItem cartItem;
+        if (optionalCartItem.isPresent()) {
+            cartItem = optionalCartItem.get();
         } else {
-            update(cartItem, quantity);
+            int emptyQuantity = 0;
+            cartItem = new CartItem(product, emptyQuantity);
+            cart.getCartItems().add(cartItem);
         }
+        update(cartItem, quantity);
     }
 
-    private CartItem findCartItem(Cart cart, Product product) {
+    private Optional<CartItem> findCartItem(Cart cart, Product product) {
         return cart.getCartItems().stream()
                 .filter(item -> item.getProduct().equals(product))
-                .findAny()
-                .orElse(null);
+                .findAny();
     }
 
     private void update(CartItem cartItem, int quantity) throws LackOfStockException {
         int newValue = cartItem.getQuantity() + quantity;
-        if (newValue > cartItem.getProduct().getStock()) {
-            throw new LackOfStockException("There is only " + cartItem.getProduct().getStock() + " products");
-        } else {
+        if (newValue < cartItem.getProduct().getStock()) {
             cartItem.setQuantity(newValue);
+        } else {
+            throw new LackOfStockException("There is only " + cartItem.getProduct().getStock() + " products");
         }
     }
 }

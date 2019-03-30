@@ -37,12 +37,12 @@ public class CartServiceTest {
     public void testGetExistingCart() {
         Cart cart = new Cart();
         when(httpSession.getAttribute(anyString())).thenReturn(cart);
-        assertEquals(cart, cartService.getCartFromSource(httpSession));
+        assertEquals(cart, cartService.getCart(httpSession));
     }
 
     @Test
     public void testGetNotExistingCart() {
-        assertNotNull(cartService.getCartFromSource(httpSession));
+        assertNotNull(cartService.getCart(httpSession));
     }
 
     @Test(expected = LackOfStockException.class)
