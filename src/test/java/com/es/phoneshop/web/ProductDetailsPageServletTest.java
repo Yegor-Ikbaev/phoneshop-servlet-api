@@ -10,55 +10,88 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import com.es.phoneshop.model.product.ArrayListProductDao;
+import com.es.phoneshop.model.product.Product;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import com.es.phoneshop.model.product.ArrayListProductDao;
-import com.es.phoneshop.model.product.Product;
-import com.es.phoneshop.model.product.ProductDao;
-
 @RunWith(MockitoJUnitRunner.class)
 public class ProductDetailsPageServletTest {
 
     @Mock
     private HttpServletRequest request;
+
     @Mock
     private HttpServletResponse response;
+
     @Mock
     private RequestDispatcher requestDispatcher;
 
-    private ProductDetailsPageServlet servlet;
+    @Mock
+    private HttpSession httpSession;
 
-    private ProductDao productDao;
+    @Mock
+    private Product product;
+
+    private ProductDetailsPageServlet servlet;
 
     @Before
     public void setup() {
         servlet = new ProductDetailsPageServlet();
-        productDao = ArrayListProductDao.getInstance();
-        when(request.getRequestDispatcher(anyString())).thenReturn(requestDispatcher);
         when(request.getPathInfo()).thenReturn("/1");
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testDoGetNoProducts() throws ServletException, IOException {
-        servlet.init();
-        servlet.doGet(request, response);
-        verify(requestDispatcher).forward(request, response);
+        when(request.getRequestDispatcher(anyString())).thenReturn(requestDispatcher);
+        when(request.getSession()).thenReturn(httpSession);
+        when(product.getStock()).thenReturn(100);
+        when(product.getId()).thenReturn((long) 1);
+        ArrayListProductDao.getInstance().save(product);
     }
 
     @Test
-    public void testDoGetWithProducts() throws ServletException, IOException {
-        Product product = new Product();
-        Long id = 1L;
-        product.setId(id);
-        productDao.save(product);
+    public void testDoGet() throws ServletException, IOException {
         servlet.init();
         servlet.doGet(request, response);
         verify(requestDispatcher).forward(request, response);
-        productDao.delete(id);
+        ArrayListProductDao.getInstance().delete(product.getId());
+    }
+
+    @Test
+    public void testDoPost() throws IOException {
+        when(request.getParameter("quantity")).thenReturn("1");
+        servlet.init();
+        servlet.doPost(request, response);
+        verify(response).sendRedirect(anyString());
+        ArrayListProductDao.getInstance().delete(product.getId());
+    }
+
+    @Test
+    public void testDoPostWithQuantityNotNumber() throws IOException {
+        when(request.getParameter("quantity")).thenReturn("symbol");
+        servlet.init();
+        servlet.doPost(request, response);
+        verify(response).sendRedirect(anyString());
+        ArrayListProductDao.getInstance().delete(product.getId());
+    }
+
+    @Test
+    public void testDoPostWithNegativeQuantity() throws IOException {
+        when(request.getParameter("quantity")).thenReturn("-1");
+        servlet.init();
+        servlet.doPost(request, response);
+        verify(response).sendRedirect(anyString());
+        ArrayListProductDao.getInstance().delete(product.getId());
+    }
+
+    @Test
+    public void testDoPostWithStockLessQuantity() throws IOException {
+        when(request.getParameter("quantity")).thenReturn("101");
+        servlet.init();
+        servlet.doPost(request, response);
+        verify(response).sendRedirect(anyString());
+        ArrayListProductDao.getInstance().delete(product.getId());
     }
 }

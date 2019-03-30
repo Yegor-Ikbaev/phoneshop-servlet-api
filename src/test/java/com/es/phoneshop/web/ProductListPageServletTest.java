@@ -50,4 +50,13 @@ public class ProductListPageServletTest {
         servlet.doGet(request, response);
         verify(requestDispatcher).forward(request, response);
     }
+
+    @Test
+    public void testDoGetSearchByEmptyString() throws ServletException, IOException {
+        when(request.getParameter("sortBy")).thenReturn("price");
+        when(request.getParameter("search")).thenReturn("");
+        servlet.init();
+        servlet.doGet(request, response);
+        verify(requestDispatcher).forward(request, response);
+    }
 }

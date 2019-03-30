@@ -4,28 +4,32 @@ import java.math.BigDecimal;
 import java.util.Currency;
 
 public class Product {
-    
+
     private Long id;
-    
+
     private String code;
-    
+
     private String description;
-    
-    /** null means there is no price because the product is outdated or new */
+
+    /**
+     * null means there is no price because the product is outdated or new
+     */
     private BigDecimal price;
-    
-    /** can be null if the price is null */
+
+    /**
+     * can be null if the price is null
+     */
     private Currency currency;
-    
+
     private int stock;
-    
+
     private String imageUrl;
 
     public Product() {
     }
 
     public Product(Long id, String code, String description, BigDecimal price, Currency currency, int stock,
-            String imageUrl) {
+                   String imageUrl) {
         this.id = id;
         this.code = code;
         this.description = description;

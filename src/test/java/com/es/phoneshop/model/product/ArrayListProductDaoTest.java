@@ -1,5 +1,6 @@
 package com.es.phoneshop.model.product;
 
+import com.es.phoneshop.model.exception.ProductNotFoundException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,7 +14,7 @@ import java.util.List;
 
 public class ArrayListProductDaoTest {
 
-    private final Long ID = 1L;
+    private static final Long ID = 1L;
 
     private Product product;
 
@@ -30,7 +31,7 @@ public class ArrayListProductDaoTest {
     public void destroy() {
         product.setPrice(new BigDecimal(1));
         product.setStock(1);
-        productDao.findProducts().forEach((product) -> productDao.delete(product.getId()));
+        productDao.findProducts().forEach(product -> productDao.delete(product.getId()));
     }
 
     @Test
@@ -68,7 +69,7 @@ public class ArrayListProductDaoTest {
         assertEquals(ID, productDao.getProduct(ID).getId());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = ProductNotFoundException.class)
     public void testGetProductByIdNoResult() {
         productDao.getProduct(ID);
     }
@@ -80,7 +81,7 @@ public class ArrayListProductDaoTest {
         assertTrue(productDao.findProducts().isEmpty());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = ProductNotFoundException.class)
     public void testDeleteProductNoSuchProduct() {
         productDao.delete(ID);
     }
@@ -169,5 +170,16 @@ public class ArrayListProductDaoTest {
         productDao.save(product4);
 
         assertTrue(productDao.findProductsByDescription("Nokia").isEmpty());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testSortByNotExistingField() {
+        productDao.sort(productDao.findProducts(), "not existing field", "order");
+    }
+
+    @Test
+    public void testSortByEmptyField() {
+        List<Product> products = productDao.findProducts();
+        assertEquals(products, productDao.sort(products, "", "order"));
     }
 }
