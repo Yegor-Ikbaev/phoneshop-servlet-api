@@ -51,7 +51,7 @@ public class HttpSessionCartService implements CartService {
 
     private void update(CartItem cartItem, int quantity) throws LackOfStockException {
         int newValue = cartItem.getQuantity() + quantity;
-        if (newValue < cartItem.getProduct().getStock()) {
+        if (newValue <= cartItem.getProduct().getStock()) {
             cartItem.setQuantity(newValue);
         } else {
             throw new LackOfStockException("There is only " + cartItem.getProduct().getStock() + " products");
