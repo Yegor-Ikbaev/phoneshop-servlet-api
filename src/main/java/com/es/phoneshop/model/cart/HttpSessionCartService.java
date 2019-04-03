@@ -4,9 +4,10 @@ import com.es.phoneshop.model.exception.LackOfStockException;
 import com.es.phoneshop.model.product.Product;
 
 import javax.servlet.http.HttpSession;
-import java.util.Optional;
 
 public class HttpSessionCartService implements CartService {
+
+    private static final int EMPTY_QUANTITY = 0;
 
     private static final String CART_ATTRIBUTE = "cart";
 
@@ -31,28 +32,24 @@ public class HttpSessionCartService implements CartService {
 
     @Override
     public void add(Cart cart, Product product, int quantity) throws LackOfStockException {
-        Optional<CartItem> optionalCartItem = findCartItem(cart, product);
-        CartItem cartItem;
-        if (optionalCartItem.isPresent()) {
-            cartItem = optionalCartItem.get();
-        } else {
-            int emptyQuantity = 0;
-            cartItem = new CartItem(product, emptyQuantity);
+        CartItem cartItem = getCartItem(cart, product);
+        if (cartItem.getQuantity() == EMPTY_QUANTITY) {
             cart.getCartItems().add(cartItem);
         }
         update(cartItem, quantity);
     }
 
-    private Optional<CartItem> findCartItem(Cart cart, Product product) {
+    private CartItem getCartItem(Cart cart, Product product) {
         return cart.getCartItems().stream()
                 .filter(item -> item.getProduct().equals(product))
-                .findAny();
+                .findAny()
+                .orElse(new CartItem(product, EMPTY_QUANTITY));
     }
 
     private void update(CartItem cartItem, int quantity) throws LackOfStockException {
-        int newValue = cartItem.getQuantity() + quantity;
-        if (newValue <= cartItem.getProduct().getStock()) {
-            cartItem.setQuantity(newValue);
+        int newQuantity = cartItem.getQuantity() + quantity;
+        if (newQuantity <= cartItem.getProduct().getStock()) {
+            cartItem.setQuantity(newQuantity);
         } else {
             throw new LackOfStockException("There is only " + cartItem.getProduct().getStock() + " products");
         }
