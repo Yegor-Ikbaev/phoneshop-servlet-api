@@ -6,6 +6,11 @@
 <jsp:useBean id="products" type="java.util.ArrayList" scope="request"/>
 
 <tags:master pageTitle="Product List">
+
+  <p>
+    <jsp:include page="/cart/minicart"/>
+  </p>
+
   <form action="">
   	<input name="search" value="${param.search}"/>
   	 <button type="submit">Search</button>

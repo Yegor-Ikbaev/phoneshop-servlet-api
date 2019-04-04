@@ -4,6 +4,11 @@
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 
 <tags:master pageTitle="Product List">
+
+    <p>
+        <jsp:include page="/cart/minicart"/>
+    </p>
+
   <table>
     <thead>
       <tr>
