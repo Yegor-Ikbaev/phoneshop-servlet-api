@@ -1,6 +1,7 @@
 package com.es.phoneshop.model.cart;
 
 import com.es.phoneshop.model.exception.LackOfStockException;
+import com.es.phoneshop.model.exception.IllegalQuantityException;
 import com.es.phoneshop.model.product.Product;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,6 +10,8 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import javax.servlet.http.HttpSession;
+
+import java.math.BigDecimal;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -31,6 +34,7 @@ public class CartServiceTest {
     public void setup() {
         cartService = HttpSessionCartService.getInstance();
         when(product.getStock()).thenReturn(10);
+        when(product.getPrice()).thenReturn(new BigDecimal(100));
     }
 
     @Test
@@ -73,5 +77,57 @@ public class CartServiceTest {
         Cart cart = new Cart();
         cart.getCartItems().add(cartItem);
         cartService.add(cart, product, 8);
+    }
+
+    @Test(expected = IllegalQuantityException.class)
+    public void testUpdateWithIllegalQuantity() throws IllegalQuantityException, LackOfStockException{
+        int illegalQuantity = 0;
+        cartService.update(new Cart(), product, illegalQuantity);
+    }
+
+    @Test
+    public void testUpdate() throws IllegalQuantityException, LackOfStockException{
+        int quantity = 5;
+        CartItem cartItem = new CartItem(product, quantity);
+        Cart cart = new Cart();
+        cart.getCartItems().add(cartItem);
+        int newQuantity = 10;
+        cartService.update(cart, product, newQuantity);
+        assertEquals(cartItem.getQuantity(), newQuantity);
+    }
+
+    @Test(expected = LackOfStockException.class)
+    public void testUpdateWithBigStock() throws IllegalQuantityException, LackOfStockException{
+        int quantity = 5;
+        CartItem cartItem = new CartItem(product, quantity);
+        Cart cart = new Cart();
+        cart.getCartItems().add(cartItem);
+        int newQuantity = 11;
+        cartService.update(cart, product, newQuantity);
+    }
+
+    @Test
+    public void testDeleteCartItem() {
+        int quantity = 5;
+        Cart cart = new Cart();
+        cart.getCartItems().add(new CartItem(product, quantity));
+        cartService.delete(cart, product);
+        assertTrue(cart.getCartItems().isEmpty());
+    }
+
+    @Test
+    public void testDeleteNotExistingCartItem() {
+        Cart cart = new Cart();
+        cartService.delete(cart, product);
+        assertTrue(cart.getCartItems().isEmpty());
+    }
+
+    @Test
+    public void testCalculateTotalPrice() {
+        Cart cart = new Cart();
+        cart.getCartItems().add(new CartItem(product, 1));
+        cart.getCartItems().add(new CartItem(product, 2));
+        cartService.calculateTotalPrice(cart);
+        assertEquals(new BigDecimal(300), cart.getTotalPrice());
     }
 }

@@ -4,7 +4,7 @@ import com.es.phoneshop.model.cart.Cart;
 import com.es.phoneshop.model.cart.CartService;
 import com.es.phoneshop.model.cart.HttpSessionCartService;
 import com.es.phoneshop.model.exception.LackOfStockException;
-import com.es.phoneshop.model.exception.QuantityFormatException;
+import com.es.phoneshop.model.exception.IllegalQuantityException;
 import com.es.phoneshop.model.product.ArrayListProductDao;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.ProductDao;
@@ -38,9 +38,9 @@ public class CartPageServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        boolean status = updateCart(request);
-        if (status) {
-            response.sendRedirect(request.getRequestURI() + "?success=" + status);
+        boolean isSuccessful = updateCart(request);
+        if (isSuccessful) {
+            response.sendRedirect(request.getRequestURI() + "?success=true");
         } else {
             doGet(request, response);
         }
@@ -59,7 +59,7 @@ public class CartPageServlet extends HttpServlet {
                 cartService.update(cart, product, quantity);
             } catch (NumberFormatException e) {
                 errors[i] = "Quantity should be a number";
-            } catch (QuantityFormatException | LackOfStockException e) {
+            } catch (IllegalQuantityException | LackOfStockException e) {
                 errors[i] = e.getMessage();
             }
         }

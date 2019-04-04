@@ -1,7 +1,7 @@
 package com.es.phoneshop.model.cart;
 
 import com.es.phoneshop.model.exception.LackOfStockException;
-import com.es.phoneshop.model.exception.QuantityFormatException;
+import com.es.phoneshop.model.exception.IllegalQuantityException;
 import com.es.phoneshop.model.product.Product;
 
 import javax.servlet.http.HttpSession;
@@ -12,7 +12,7 @@ public interface CartService {
 
     void add(Cart cart, Product product, int quantity) throws LackOfStockException;
 
-    void update(Cart cart, Product product, int quantity) throws LackOfStockException, QuantityFormatException;
+    void update(Cart cart, Product product, int quantity) throws LackOfStockException, IllegalQuantityException;
 
     void delete(Cart cart, Product product);
 
