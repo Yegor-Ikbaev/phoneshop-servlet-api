@@ -24,6 +24,26 @@
     <servlet-name>productDetails</servlet-name>
     <url-pattern>/products/*</url-pattern>
   </servlet-mapping>
+
+  <servlet>
+    <servlet-name>cartPage</servlet-name>
+    <servlet-class>com.es.phoneshop.web.CartPageServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>cartPage</servlet-name>
+    <url-pattern>/cart</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>deleteCartItem</servlet-name>
+    <servlet-class>com.es.phoneshop.web.DeleteCartItemServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>deleteCartItem</servlet-name>
+    <url-pattern>/cart/delete/*</url-pattern>
+  </servlet-mapping>
   
   <listener>
     <listener-class>com.es.phoneshop.web.listeners.ProductDemodataServletContextListener</listener-class>

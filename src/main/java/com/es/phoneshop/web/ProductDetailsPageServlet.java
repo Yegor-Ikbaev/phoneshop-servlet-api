@@ -76,6 +76,7 @@ public class ProductDetailsPageServlet extends HttpServlet {
         Product product = productDao.getProduct(extractId(request));
         Cart cart = cartService.getCart(request.getSession());
         cartService.add(cart, product, quantity);
+        cartService.calculateTotalPrice(cart);
     }
 
     private Long extractId(HttpServletRequest request) {
