@@ -4,7 +4,7 @@ import com.es.phoneshop.model.exception.LackOfStockException;
 import com.es.phoneshop.model.exception.IllegalQuantityException;
 import com.es.phoneshop.model.product.Product;
 
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 
 public class HttpSessionCartService implements CartService {
@@ -23,22 +23,22 @@ public class HttpSessionCartService implements CartService {
     }
 
     @Override
-    public Cart getCart(HttpSession httpSession) {
-        Cart cart = (Cart) httpSession.getAttribute(CART_ATTRIBUTE);
+    public Cart getCart(HttpServletRequest request) {
+        Cart cart = (Cart) request.getSession().getAttribute(CART_ATTRIBUTE);
         if (cart == null) {
             cart = new Cart();
-            httpSession.setAttribute(CART_ATTRIBUTE, cart);
+            request.getSession().setAttribute(CART_ATTRIBUTE, cart);
         }
         return cart;
     }
 
     @Override
-    public void add(Cart cart, Product product, int quantity) throws LackOfStockException {
+    public void add(Cart cart, Product product, int quantity) throws LackOfStockException, IllegalQuantityException {
         CartItem cartItem = getCartItem(cart, product);
-        if (cartItem.getQuantity() == EMPTY_QUANTITY) {
+        updateCartItem(cartItem, quantity);
+        if (!cart.getCartItems().contains(cartItem)) {
             cart.getCartItems().add(cartItem);
         }
-        updateCartItem(cartItem, quantity);
     }
 
     private CartItem getCartItem(Cart cart, Product product) {
@@ -48,7 +48,10 @@ public class HttpSessionCartService implements CartService {
                 .orElse(new CartItem(product, EMPTY_QUANTITY));
     }
 
-    private void updateCartItem(CartItem cartItem, int quantity) throws LackOfStockException {
+    private void updateCartItem(CartItem cartItem, int quantity) throws LackOfStockException, IllegalQuantityException {
+        if (quantity < 1) {
+            throw new IllegalQuantityException("Quantity should be greater 0");
+        }
         int newQuantity = cartItem.getQuantity() + quantity;
         if (newQuantity <= cartItem.getProduct().getStock()) {
             cartItem.setQuantity(newQuantity);
@@ -59,9 +62,6 @@ public class HttpSessionCartService implements CartService {
 
     @Override
     public void update(Cart cart, Product product, int quantity) throws LackOfStockException, IllegalQuantityException {
-        if (quantity < 1) {
-            throw new IllegalQuantityException("Quantity should be greater 0");
-        }
         CartItem cartItem = getCartItem(cart, product);
         cartItem.setQuantity(EMPTY_QUANTITY);
         updateCartItem(cartItem, quantity);

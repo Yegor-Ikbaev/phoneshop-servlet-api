@@ -32,7 +32,7 @@ public class CartPageServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.setAttribute("cart", cartService.getCart(request.getSession()));
+        request.setAttribute("cart", cartService.getCart(request));
         request.getRequestDispatcher("/WEB-INF/pages/cart.jsp").forward(request, response);
     }
 
@@ -50,7 +50,7 @@ public class CartPageServlet extends HttpServlet {
         String[] productsIds = request.getParameterValues("productId");
         String[] quantities = request.getParameterValues("quantity");
         String[] errors = new String[productsIds.length];
-        Cart cart = cartService.getCart(request.getSession());
+        Cart cart = cartService.getCart(request);
         for (int i = 0; i < productsIds.length; i++) {
             try {
                 Long productId = Long.parseLong(productsIds[i]);

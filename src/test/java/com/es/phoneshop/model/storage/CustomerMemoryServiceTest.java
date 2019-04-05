@@ -7,6 +7,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import static org.junit.Assert.*;
@@ -15,14 +16,16 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CustomerMemoryServiceTest {
-
-    private CustomerMemoryService customerMemoryService;
-
     @Mock
     private HttpSession httpSession;
 
     @Mock
+    private HttpServletRequest request;
+
+    @Mock
     private Product product;
+
+    private CustomerMemoryService customerMemoryService;
 
     private Storage storage;
 
@@ -30,17 +33,18 @@ public class CustomerMemoryServiceTest {
     public void setup() {
         customerMemoryService = HttpSessionCustomerMemory.getInstance();
         storage = new Storage();
+        when(request.getSession()).thenReturn(httpSession);
     }
 
     @Test
     public void testGetExistingStorage() {
         when(httpSession.getAttribute(anyString())).thenReturn(storage);
-        assertEquals(storage, customerMemoryService.getStorage(httpSession));
+        assertEquals(storage, customerMemoryService.getStorage(request));
     }
 
     @Test
     public void testGetNotExistingStorage() {
-        assertNotNull(customerMemoryService.getStorage(httpSession));
+        assertNotNull(customerMemoryService.getStorage(request));
     }
 
     @Test

@@ -32,15 +32,15 @@
         <c:url value="/products/${product.id}" var="thisPage"/>
         <form method="post" action="${thisPage}">
             <c:if test="${not empty param.success}">
-                <span style="color: green">${param.success}</span>
+                <span style="color: green">Successfully added</span>
                 <br>
             </c:if>
             <span>Quantity: </span>
-            <input name="quantity" value="${empty param.quantity ? 1 : param.quantity}" style="text-align: right"/>
+            <input name="quantity" value="${empty quantity ? 1 : quantity}" style="text-align: right"/>
             <button type="submit">Add</button>
-            <c:if test="${not empty param.exception}">
+            <c:if test="${not empty errorMessage}">
                 <br>
-                <span style="color: red">${param.exception}</span>
+                <span style="color: red">${errorMessage}</span>
             </c:if>
         </form>
     </p>
