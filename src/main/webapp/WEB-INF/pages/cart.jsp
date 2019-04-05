@@ -6,12 +6,12 @@
 <jsp:useBean id="cart" type="com.es.phoneshop.model.cart.Cart" scope="request"/>
 
 <tags:master pageTitle="Cart">
-    <c:if test="${paramValues.success ne null}">
+    <c:if test="${not empty paramValues.success}">
         <p>
             <span style="color: green">Successfully updated</span>
         </p>
     </c:if>
-    <c:if test="${success eq false}">
+    <c:if test="${not empty success}">
         <p>
             <span style="color: red">Updating error</span>
         </p>
@@ -37,26 +37,26 @@
                     Action
                 </td>
             </tr>
-            </thead
+            </thead>
 
-            <c:forEach var="cartItem" items="${cart.cartItems}" varStatus="iterator">
+            <c:forEach var="cartItem" items="${cart.cartItems}" varStatus="status">
                 <tr>
                     <td>
                         <img class="product-tile"
                              src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${cartItem.product.imageUrl}">
                     </td>
                     <td>
-                        <c:url value="/products/${cartItem.product.id}" var="productId"/>
+                        <c:url value="/products/${cartItem.product.id}" var="productUrl"/>
                         <input name="productId" type="hidden" value="${cartItem.product.id}"/>
-                        <a href="${productId}">${cartItem.product.description}</a>
+                        <a href="${productUrl}">${cartItem.product.description}</a>
                     </td>
                     <td>
-                        <input name="quantity" style="text-align: right" value="${errors[iterator.index] eq null
+                        <input name="quantity" style="text-align: right" value="${empty errors[status.index]
                                                                     ? cartItem.quantity
-                                                                    : quantities[iterator.index]}"/>
-                        <c:if test="${errors[iterator.index] ne null}">
+                                                                    : quantities[status.index]}"/>
+                        <c:if test="${errors[status.index] ne null}">
                             <br>
-                            <span style="color: red">${errors[iterator.index]}</span>
+                            <span style="color: red">${errors[status.index]}</span>
                         </c:if>
                     </td>
                     <td class="price">

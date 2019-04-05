@@ -74,12 +74,9 @@ public class HttpSessionCartService implements CartService {
 
     @Override
     public void calculateTotalPrice(Cart cart) {
-        cart.setTotalPrice(BigDecimal.ZERO);
-        cart.getCartItems().forEach(cartItem -> {
-            BigDecimal productPrice = cartItem.getProduct().getPrice();
-            BigDecimal quantity = new BigDecimal(cartItem.getQuantity());
-            BigDecimal totalPrice = cart.getTotalPrice().add(productPrice.multiply(quantity));
-            cart.setTotalPrice(totalPrice);
-        });
+        BigDecimal totalPrice = cart.getCartItems().stream()
+                .map(cartItem -> cartItem.getProduct().getPrice().multiply(new BigDecimal(cartItem.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        cart.setTotalPrice(totalPrice);
     }
 }
