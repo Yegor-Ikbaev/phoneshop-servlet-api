@@ -5,6 +5,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -22,7 +23,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ProductDetailsPageServletTest {
-
     @Mock
     private HttpServletRequest request;
 
@@ -48,6 +48,7 @@ public class ProductDetailsPageServletTest {
         when(request.getSession()).thenReturn(httpSession);
         when(product.getStock()).thenReturn(100);
         when(product.getId()).thenReturn((long) 1);
+        when(product.getPrice()).thenReturn(new BigDecimal(1));
         ArrayListProductDao.getInstance().save(product);
     }
 
@@ -60,7 +61,7 @@ public class ProductDetailsPageServletTest {
     }
 
     @Test
-    public void testDoPost() throws IOException {
+    public void testDoPost() throws IOException, ServletException {
         when(request.getParameter("quantity")).thenReturn("1");
         servlet.init();
         servlet.doPost(request, response);
@@ -69,29 +70,29 @@ public class ProductDetailsPageServletTest {
     }
 
     @Test
-    public void testDoPostWithQuantityNotNumber() throws IOException {
+    public void testDoPostWithQuantityNotNumber() throws IOException, ServletException {
         when(request.getParameter("quantity")).thenReturn("symbol");
         servlet.init();
         servlet.doPost(request, response);
-        verify(response).sendRedirect(anyString());
+        verify(requestDispatcher).forward(request, response);
         ArrayListProductDao.getInstance().delete(product.getId());
     }
 
     @Test
-    public void testDoPostWithNegativeQuantity() throws IOException {
+    public void testDoPostWithNegativeQuantity() throws IOException, ServletException {
         when(request.getParameter("quantity")).thenReturn("-1");
         servlet.init();
         servlet.doPost(request, response);
-        verify(response).sendRedirect(anyString());
+        verify(requestDispatcher).forward(request, response);
         ArrayListProductDao.getInstance().delete(product.getId());
     }
 
     @Test
-    public void testDoPostWithStockLessQuantity() throws IOException {
+    public void testDoPostWithStockLessQuantity() throws IOException, ServletException {
         when(request.getParameter("quantity")).thenReturn("101");
         servlet.init();
         servlet.doPost(request, response);
-        verify(response).sendRedirect(anyString());
+        verify(requestDispatcher).forward(request, response);
         ArrayListProductDao.getInstance().delete(product.getId());
     }
 }

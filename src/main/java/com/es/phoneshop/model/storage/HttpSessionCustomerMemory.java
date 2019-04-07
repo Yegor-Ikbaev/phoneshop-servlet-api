@@ -2,7 +2,7 @@ package com.es.phoneshop.model.storage;
 
 import com.es.phoneshop.model.product.Product;
 
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Deque;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,6 +10,8 @@ import java.util.stream.Collectors;
 public class HttpSessionCustomerMemory implements CustomerMemoryService {
 
     private static final String STORAGE_ATTRIBUTE = "storage";
+
+    private static final int RECENTLY_VIEWED_PRODUCTS_NUMBER = 3;
 
     private static final CustomerMemoryService INSTANCE = new HttpSessionCustomerMemory();
 
@@ -21,11 +23,11 @@ public class HttpSessionCustomerMemory implements CustomerMemoryService {
     }
 
     @Override
-    public Storage getStorage(HttpSession httpSession) {
-        Storage storage = (Storage) httpSession.getAttribute(STORAGE_ATTRIBUTE);
+    public Storage getStorage(HttpServletRequest request) {
+        Storage storage = (Storage) request.getSession().getAttribute(STORAGE_ATTRIBUTE);
         if (storage == null) {
             storage = new Storage();
-            httpSession.setAttribute(STORAGE_ATTRIBUTE, storage);
+            request.getSession().setAttribute(STORAGE_ATTRIBUTE, storage);
         }
         return storage;
     }
@@ -40,7 +42,7 @@ public class HttpSessionCustomerMemory implements CustomerMemoryService {
     @Override
     public List<Product> getRecentlyViewedProducts(Storage storage) {
         return storage.getViewedProducts().stream()
-                .limit(3)
+                .limit(RECENTLY_VIEWED_PRODUCTS_NUMBER)
                 .collect(Collectors.toList());
     }
 }

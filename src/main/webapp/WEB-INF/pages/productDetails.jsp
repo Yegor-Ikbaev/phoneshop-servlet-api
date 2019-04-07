@@ -4,6 +4,11 @@
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 
 <tags:master pageTitle="Product List">
+
+    <p>
+        <jsp:include page="/cart/minicart"/>
+    </p>
+
   <table>
     <thead>
       <tr>
@@ -27,37 +32,19 @@
         <c:url value="/products/${product.id}" var="thisPage"/>
         <form method="post" action="${thisPage}">
             <c:if test="${not empty param.success}">
-                <span style="color: green">${param.success}</span>
+                <span style="color: green">Successfully added</span>
                 <br>
             </c:if>
             <span>Quantity: </span>
-            <input name="quantity" value="${empty param.quantity ? 1 : param.quantity}" style="text-align: right"/>
+            <input name="quantity" value="${empty quantity ? 1 : quantity}" style="text-align: right"/>
             <button type="submit">Add</button>
-            <c:if test="${not empty param.exception}">
+            <c:if test="${not empty errorMessage}">
                 <br>
-                <span style="color: red">${param.exception}</span>
+                <span style="color: red">${errorMessage}</span>
             </c:if>
         </form>
     </p>
 
-    <c:if test="${not empty recentlyViewedProducts}">
-        <p>
-        <h3>Recently viewed products</h3>
-        <table>
-            <tr>
-                <c:forEach var="product" items="${recentlyViewedProducts}">
-                    <td class="price" style="text-align: center">
-                        <img class="product-tile" src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${product.imageUrl}">
-                        <br>
-                        <c:url value="/products/${product.id}" var="productId"/>
-                        <a href="${productId}">${product.description}</a>
-                        <br>
-                        <fmt:formatNumber value="${product.price}" type="currency" currencySymbol="${product.currency.symbol}"/>
-                    </td>
-                </c:forEach>
-            </tr>
-        </table>
-    </p>
-    </c:if>
+    <tags:recentlyViewed products="${recentlyViewedProducts}"/>
 
 </tags:master>

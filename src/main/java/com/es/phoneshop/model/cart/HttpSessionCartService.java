@@ -1,12 +1,15 @@
 package com.es.phoneshop.model.cart;
 
 import com.es.phoneshop.model.exception.LackOfStockException;
+import com.es.phoneshop.model.exception.IllegalQuantityException;
 import com.es.phoneshop.model.product.Product;
 
-import javax.servlet.http.HttpSession;
-import java.util.Optional;
+import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 
 public class HttpSessionCartService implements CartService {
+
+    private static final int EMPTY_QUANTITY = 0;
 
     private static final String CART_ATTRIBUTE = "cart";
 
@@ -20,41 +23,60 @@ public class HttpSessionCartService implements CartService {
     }
 
     @Override
-    public Cart getCart(HttpSession httpSession) {
-        Cart cart = (Cart) httpSession.getAttribute(CART_ATTRIBUTE);
+    public Cart getCart(HttpServletRequest request) {
+        Cart cart = (Cart) request.getSession().getAttribute(CART_ATTRIBUTE);
         if (cart == null) {
             cart = new Cart();
-            httpSession.setAttribute(CART_ATTRIBUTE, cart);
+            request.getSession().setAttribute(CART_ATTRIBUTE, cart);
         }
         return cart;
     }
 
     @Override
-    public void add(Cart cart, Product product, int quantity) throws LackOfStockException {
-        Optional<CartItem> optionalCartItem = findCartItem(cart, product);
-        CartItem cartItem;
-        if (optionalCartItem.isPresent()) {
-            cartItem = optionalCartItem.get();
-        } else {
-            int emptyQuantity = 0;
-            cartItem = new CartItem(product, emptyQuantity);
+    public void add(Cart cart, Product product, int quantity) throws LackOfStockException, IllegalQuantityException {
+        CartItem cartItem = getCartItem(cart, product);
+        updateCartItem(cartItem, quantity);
+        if (!cart.getCartItems().contains(cartItem)) {
             cart.getCartItems().add(cartItem);
         }
-        update(cartItem, quantity);
     }
 
-    private Optional<CartItem> findCartItem(Cart cart, Product product) {
+    private CartItem getCartItem(Cart cart, Product product) {
         return cart.getCartItems().stream()
                 .filter(item -> item.getProduct().equals(product))
-                .findAny();
+                .findAny()
+                .orElse(new CartItem(product, EMPTY_QUANTITY));
     }
 
-    private void update(CartItem cartItem, int quantity) throws LackOfStockException {
-        int newValue = cartItem.getQuantity() + quantity;
-        if (newValue <= cartItem.getProduct().getStock()) {
-            cartItem.setQuantity(newValue);
+    private void updateCartItem(CartItem cartItem, int quantity) throws LackOfStockException, IllegalQuantityException {
+        if (quantity < 1) {
+            throw new IllegalQuantityException("Quantity should be greater 0");
+        }
+        int newQuantity = cartItem.getQuantity() + quantity;
+        if (newQuantity <= cartItem.getProduct().getStock()) {
+            cartItem.setQuantity(newQuantity);
         } else {
             throw new LackOfStockException("There is only " + cartItem.getProduct().getStock() + " products");
         }
+    }
+
+    @Override
+    public void update(Cart cart, Product product, int quantity) throws LackOfStockException, IllegalQuantityException {
+        CartItem cartItem = getCartItem(cart, product);
+        cartItem.setQuantity(EMPTY_QUANTITY);
+        updateCartItem(cartItem, quantity);
+    }
+
+    @Override
+    public void delete(Cart cart, Product product) {
+        cart.getCartItems().removeIf(cartItem -> cartItem.getProduct().equals(product));
+    }
+
+    @Override
+    public void calculateTotalPrice(Cart cart) {
+        BigDecimal totalPrice = cart.getCartItems().stream()
+                .map(cartItem -> cartItem.getProduct().getPrice().multiply(new BigDecimal(cartItem.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        cart.setTotalPrice(totalPrice);
     }
 }
