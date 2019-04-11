@@ -60,7 +60,8 @@
                         </c:if>
                     </td>
                     <td class="price">
-                        <fmt:formatNumber value="${cartItem.product.price}" type="currency" currencySymbol="${cartItem.product.currency.symbol}"/>
+                        <fmt:formatNumber value="${cartItem.product.price}" type="currency"
+                                          currencySymbol="${cartItem.product.currency.symbol}"/>
                     </td>
                     <td>
                         <c:url value="/cart/delete/${cartItem.product.id}" var="deleteUrl"/>
@@ -71,7 +72,7 @@
 
             <tr>
                 <td colspan="3" style="text-align: right">
-                    Total price:
+                    Price:
                 </td>
                 <td>
                     <fmt:formatNumber value="${cart.totalPrice}" type="currency" currencySymbol="USD"/>
@@ -84,4 +85,10 @@
             <button formaction="${updateUrl}">Update</button>
         </p>
     </form>
+    <p>
+    <form>
+        <c:url value="/checkout" var="checkoutUrl"/>
+        <button formaction="${checkoutUrl}">Checkout</button>
+    </form>
+    </p>
 </tags:master>
