@@ -65,6 +65,16 @@
     <url-pattern>/cart/minicart</url-pattern>
   </servlet-mapping>
 
+  <servlet>
+    <servlet-name>orderOverview</servlet-name>
+    <servlet-class>com.es.phoneshop.web.OrderOverviewServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>orderOverview</servlet-name>
+    <url-pattern>/order/overview/*</url-pattern>
+  </servlet-mapping>
+
   <filter>
     <filter-name>dosProtectionFilter</filter-name>
     <filter-class>com.es.phoneshop.web.filters.DOSProtectionFilter</filter-class>
@@ -81,6 +91,11 @@
   
   <error-page>
     <exception-type>com.es.phoneshop.model.exception.ProductNotFoundException</exception-type>
+    <location>/WEB-INF/pages/exceptionPage.jsp</location>
+  </error-page>
+
+  <error-page>
+    <exception-type>com.es.phoneshop.model.exception.OrderNotFoundException</exception-type>
     <location>/WEB-INF/pages/exceptionPage.jsp</location>
   </error-page>
 </web-app>

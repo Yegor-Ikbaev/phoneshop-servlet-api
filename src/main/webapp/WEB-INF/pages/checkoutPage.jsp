@@ -86,22 +86,17 @@
             <label for="deliveryMode">Delivery mode</label>
             <select id="deliveryMode" name="deliveryMode">
                 <c:forEach var="deliveryMode" items="${deliveryModes}">
-                    <option value="${deliveryMode.price}">${deliveryMode.description}</option>
+                    <option value="${deliveryMode.description}">${deliveryMode.description}
+                        (${deliveryMode.price})</option>
                 </c:forEach>
             </select>
-            <label id="priceOfDelivery" name="priceOfDelivery">Price:</label>
-            <script type="text/javascript">
-                document.getElementById("deliveryMode").addEventListener("change", function () {
-                    document.getElementById("priceOfDelivery").innerHTML = "Price: " + this.value;
-                });
-            </script>
         </p>
 
         <p>
             <label for="date">Delivery date</label>
             <select id="date" name="date">
                 <c:forEach var="date" items="${dates}">
-                    <option>${date.description}</option>
+                    <option value="${date.description}">${date.description}</option>
                 </c:forEach>
             </select>
         </p>
@@ -119,7 +114,7 @@
             <label for="paymentMethod">Payment method</label>
             <select id="paymentMethod" name="paymentMethod">
                 <c:forEach var="paymentMethod" items="${paymentMethods}">
-                    <option>${paymentMethod.description}</option>
+                    <option value="${paymentMethod.description}">${paymentMethod.description}</option>
                 </c:forEach>
             </select>
         </p>
