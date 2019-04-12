@@ -74,7 +74,7 @@
         <span>Delivery address: ${order.deliveryDetails.address}</span>
     </p>
     <p>
-        <span>Delivery date: ${order.deliveryDetails.date}</span>
+        <span>Delivery date: ${order.deliveryDetails.date.description}</span>
     </p>
 
     <p>
