@@ -37,9 +37,9 @@ public class CheckoutPageServlet extends HttpServlet {
             throws ServletException, IOException {
         Cart cart = cartService.getCart(request);
         request.setAttribute("cart", cart);
-        request.setAttribute("deliveryModes", DeliveryMode.getDeliveryModes());
-        request.setAttribute("dates", DeliveryDate.getDeliveryDates());
-        request.setAttribute("paymentMethods", PaymentMethod.getPaymentMethods());
+        request.setAttribute("deliveryModes", orderService.getDeliveryModes());
+        request.setAttribute("dates", orderService.getDeliveryDates());
+        request.setAttribute("paymentMethods", orderService.getPaymentMethods());
         request.getRequestDispatcher("/WEB-INF/pages/checkoutPage.jsp").forward(request, response);
     }
 
@@ -60,13 +60,13 @@ public class CheckoutPageServlet extends HttpServlet {
         Optional<ContactDetails> optionalContactDetails = getContactsDetailsFromRequest(request);
         Optional<DeliveryDetails> optionalDeliveryDetails = getDeliveryDetailsFromRequest(request);
         PaymentMethod paymentMethod = getPaymentMethodFormRequest(request);
-        if (!optionalContactDetails.isPresent() || !optionalDeliveryDetails.isPresent()) {
-            return Optional.empty();
-        } else {
+        if (optionalContactDetails.isPresent() && optionalDeliveryDetails.isPresent()) {
             Order order = orderService.createOrder(cartService.getCart(request));
             orderService.placeOrder(order, optionalContactDetails.get(),
                     optionalDeliveryDetails.get(), paymentMethod);
             return Optional.of(order);
+        } else {
+            return Optional.empty();
         }
     }
 
@@ -103,14 +103,14 @@ public class CheckoutPageServlet extends HttpServlet {
 
     private Optional<DeliveryDetails> getDeliveryDetailsFromRequest(HttpServletRequest request) {
         boolean isSuccessful = true;
-        DeliveryMode deliveryMode = DeliveryMode.getDeliveryMode(request.getParameter("deliveryMode"));
-        DeliveryDate deliveryDate = DeliveryDate.getDeliveryDate(request.getParameter("date"));
         String address = request.getParameter(ADDRESS_PARAMETER);
         if (isIncorrect(address)) {
             isSuccessful = false;
             request.setAttribute("addressError", "Incorrect address");
         }
         if (isSuccessful) {
+            DeliveryMode deliveryMode = orderService.getDeliveryMode(request.getParameter("deliveryMode"));
+            DeliveryDate deliveryDate = orderService.getDeliveryDate(request.getParameter("date"));
             return Optional.of(new DeliveryDetails(deliveryMode, deliveryDate, address));
         } else {
             return Optional.empty();
@@ -118,7 +118,7 @@ public class CheckoutPageServlet extends HttpServlet {
     }
 
     private PaymentMethod getPaymentMethodFormRequest(HttpServletRequest request) {
-        return PaymentMethod.getPaymentMethod(request.getParameter("paymentMethod"));
+        return orderService.getPaymentMethod(request.getParameter("paymentMethod"));
     }
 
     private boolean isIncorrect(String value) {

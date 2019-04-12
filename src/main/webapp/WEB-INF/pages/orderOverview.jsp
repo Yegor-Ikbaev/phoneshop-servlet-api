@@ -65,7 +65,7 @@
 
 
     <p>
-        <span>Delivery mode: ${order.deliveryDetails.mode}</span>
+        <span>Delivery mode: ${order.deliveryDetails.mode.description}</span>
     </p>
     <p>
         <span>Delivery price: ${order.deliveryDetails.price}</span>

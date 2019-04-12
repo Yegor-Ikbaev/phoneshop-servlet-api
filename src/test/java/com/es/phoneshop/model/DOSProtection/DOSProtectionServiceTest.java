@@ -6,7 +6,6 @@ import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DOSProtectionServiceTest {
@@ -32,20 +31,4 @@ public class DOSProtectionServiceTest {
         }
         assertTrue(!service.isAllowed(ip));
     }
-
-    @Test
-    public void testRefreshingCache() {
-        String ip = "3";
-        for (int i = 0; i < 20; i++) {
-            service.isAllowed(ip);
-        }
-        long minute = 60_000;
-        try {
-            Thread.sleep(minute);
-        } catch (InterruptedException e) {
-            fail();
-        }
-        assertTrue(service.isAllowed(ip));
-    }
-
 }

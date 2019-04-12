@@ -1,8 +1,5 @@
 package com.es.phoneshop.model.checkout;
 
-import java.util.Arrays;
-import java.util.List;
-
 public enum PaymentMethod {
     CARD("Card"), CASH("Cash");
 
@@ -16,14 +13,4 @@ public enum PaymentMethod {
         return description;
     }
 
-    public static PaymentMethod getPaymentMethod(String description) {
-        return getPaymentMethods().stream()
-                .filter(mode -> mode.getDescription().equalsIgnoreCase(description))
-                .findAny()
-                .orElseThrow(IllegalArgumentException::new);
-    }
-
-    public static List<PaymentMethod> getPaymentMethods() {
-        return Arrays.asList(values());
-    }
 }

@@ -42,8 +42,7 @@ public class DOSProtectionFilterTest {
 
     @Test
     public void testDoFilterWithPositiveResult() throws IOException, ServletException {
-        String ip = "2";
-        protectionService.isAllowed(ip);
+        String ip = "3";
         when(request.getRemoteAddr()).thenReturn(ip);
         filter.init(filterConfig);
         filter.doFilter(request, response, chain);
@@ -52,7 +51,7 @@ public class DOSProtectionFilterTest {
 
     @Test
     public void testDoFilterWithNegativeResult() throws IOException, ServletException {
-        String ip = "1";
+        String ip = "4";
         when(request.getRemoteAddr()).thenReturn(ip);
         for (int i = 0; i < 20; i++) {
             protectionService.isAllowed(ip);

@@ -9,9 +9,10 @@ public class ArrayListOrderDao implements OrderDao {
 
     private static final OrderDao INSTANCE = new ArrayListOrderDao();
 
-    private List<Order> orders = new ArrayList<>();
+    private List<Order> orders;
 
     private ArrayListOrderDao(){
+        orders = new ArrayList<>();
     }
 
     public static OrderDao getInstance() {
