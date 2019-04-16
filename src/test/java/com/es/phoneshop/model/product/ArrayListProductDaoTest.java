@@ -43,7 +43,9 @@ public class ArrayListProductDaoTest {
     public void testFindProductAfterSaving() {
         product.setPrice(new BigDecimal(1));
         product.setStock(1);
+
         productDao.save(product);
+
         assertEquals(1, productDao.findProducts().size());
     }
 
@@ -51,13 +53,16 @@ public class ArrayListProductDaoTest {
     public void testFindProductAfterSavingWithStockLess0() {
         product.setPrice(new BigDecimal(1));
         product.setStock(0);
+
         productDao.save(product);
+
         assertTrue(productDao.findProducts().isEmpty());
     }
 
     @Test
     public void testFindProductAfterSavingNoResults() {
         productDao.save(product);
+
         assertTrue(productDao.findProducts().isEmpty());
     }
 
@@ -65,7 +70,9 @@ public class ArrayListProductDaoTest {
     public void testGetProductById() {
         product.setPrice(new BigDecimal(1));
         product.setStock(1);
+
         productDao.save(product);
+
         assertEquals(ID, productDao.getProduct(ID).getId());
     }
 
@@ -78,6 +85,7 @@ public class ArrayListProductDaoTest {
     public void testDeleteProduct() {
         productDao.save(product);
         productDao.delete(ID);
+
         assertTrue(productDao.findProducts().isEmpty());
     }
 
@@ -90,6 +98,7 @@ public class ArrayListProductDaoTest {
     public void testSaveProductsWithSameId() {
         Product product2 = new Product();
         product2.setId(ID);
+
         productDao.save(product);
         productDao.save(product2);
     }
@@ -97,6 +106,7 @@ public class ArrayListProductDaoTest {
     @Test(expected = IllegalArgumentException.class)
     public void testSaveProductsWithNullId() {
         product.setId(null);
+
         productDao.save(product);
     }
 
@@ -125,15 +135,14 @@ public class ArrayListProductDaoTest {
         product4.setId(4L);
         product4.setPrice(price);
         product4.setStock(stock);
+        List<Product> controlProducts = new ArrayList<>();
+        controlProducts.add(product1);
+        controlProducts.add(product2);
 
         productDao.save(product1);
         productDao.save(product2);
         productDao.save(product3);
         productDao.save(product4);
-
-        List<Product> controlProducts = new ArrayList<>();
-        controlProducts.add(product1);
-        controlProducts.add(product2);
 
         assertEquals(controlProducts, productDao.findProductsByDescription("Samsung"));
     }

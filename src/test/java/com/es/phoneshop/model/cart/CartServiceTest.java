@@ -45,12 +45,17 @@ public class CartServiceTest {
     public void testGetExistingCart() {
         Cart cart = new Cart();
         when(httpSession.getAttribute(anyString())).thenReturn(cart);
-        assertEquals(cart, cartService.getCart(request));
+
+        Cart cartFromSession = cartService.getCart(request);
+
+        assertEquals(cart, cartFromSession);
     }
 
     @Test
     public void testGetNotExistingCart() {
-        assertNotNull(cartService.getCart(request));
+        Cart cart = cartService.getCart(request);
+
+        assertNotNull(cart);
     }
 
     @Test(expected = LackOfStockException.class)
@@ -61,7 +66,9 @@ public class CartServiceTest {
     @Test
     public void testAddWithoutSameCartItem() throws LackOfStockException, IllegalQuantityException {
         Cart cart = new Cart();
+
         cartService.add(cart, product, 8);
+
         assertTrue(!cart.getCartItems().isEmpty());
     }
 
@@ -71,7 +78,9 @@ public class CartServiceTest {
         Cart cart = new Cart();
         cart.getCartItems().add(cartItem);
         int quantity = 8;
+
         cartService.add(cart, product, quantity);
+
         assertEquals(cartItem.getQuantity(), quantity + 1);
     }
 
@@ -80,6 +89,7 @@ public class CartServiceTest {
         CartItem cartItem = new CartItem(product, 3);
         Cart cart = new Cart();
         cart.getCartItems().add(cartItem);
+
         cartService.add(cart, product, 8);
     }
 
@@ -96,7 +106,9 @@ public class CartServiceTest {
         Cart cart = new Cart();
         cart.getCartItems().add(cartItem);
         int newQuantity = 10;
+
         cartService.update(cart, product, newQuantity);
+
         assertEquals(cartItem.getQuantity(), newQuantity);
     }
 
@@ -107,6 +119,7 @@ public class CartServiceTest {
         Cart cart = new Cart();
         cart.getCartItems().add(cartItem);
         int newQuantity = 11;
+
         cartService.update(cart, product, newQuantity);
     }
 
@@ -115,14 +128,18 @@ public class CartServiceTest {
         int quantity = 5;
         Cart cart = new Cart();
         cart.getCartItems().add(new CartItem(product, quantity));
+
         cartService.delete(cart, product);
+
         assertTrue(cart.getCartItems().isEmpty());
     }
 
     @Test
     public void testDeleteNotExistingCartItem() {
         Cart cart = new Cart();
+
         cartService.delete(cart, product);
+
         assertTrue(cart.getCartItems().isEmpty());
     }
 
@@ -131,7 +148,21 @@ public class CartServiceTest {
         Cart cart = new Cart();
         cart.getCartItems().add(new CartItem(product, 1));
         cart.getCartItems().add(new CartItem(product, 2));
+
         cartService.calculateTotalPrice(cart);
+
         assertEquals(new BigDecimal(300), cart.getTotalPrice());
+    }
+
+    @Test
+    public void testClearCart() {
+        Cart cart = new Cart();
+        cart.getCartItems().add(new CartItem(product, 1));
+        cart.getCartItems().add(new CartItem(product, 2));
+
+        cartService.clear(cart);
+
+        assertTrue(cart.getCartItems().isEmpty());
+        assertEquals(BigDecimal.ZERO, cart.getTotalPrice());
     }
 }

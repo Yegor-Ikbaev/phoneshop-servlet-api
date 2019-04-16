@@ -30,6 +30,7 @@ public class ProductListPageServletTest {
     @Before
     public void setup() {
         servlet = new ProductListPageServlet();
+        servlet.init();
         when(request.getRequestDispatcher(anyString())).thenReturn(requestDispatcher);
         when(request.getParameter("search")).thenReturn("Samsung");
         when(request.getParameter("order")).thenReturn("desc");
@@ -38,16 +39,18 @@ public class ProductListPageServletTest {
     @Test
     public void testDoGetSortByDescription() throws ServletException, IOException {
         when(request.getParameter("sortBy")).thenReturn("description");
-        servlet.init();
+
         servlet.doGet(request, response);
+
         verify(requestDispatcher).forward(request, response);
     }
 
     @Test
     public void testDoGetSortByPrice() throws ServletException, IOException {
         when(request.getParameter("sortBy")).thenReturn("price");
-        servlet.init();
+
         servlet.doGet(request, response);
+
         verify(requestDispatcher).forward(request, response);
     }
 
@@ -55,8 +58,9 @@ public class ProductListPageServletTest {
     public void testDoGetSearchByEmptyString() throws ServletException, IOException {
         when(request.getParameter("sortBy")).thenReturn("price");
         when(request.getParameter("search")).thenReturn("");
-        servlet.init();
+
         servlet.doGet(request, response);
+
         verify(requestDispatcher).forward(request, response);
     }
 }

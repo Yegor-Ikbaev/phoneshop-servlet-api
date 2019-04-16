@@ -7,30 +7,36 @@
 
     <p>
         <jsp:include page="/cart/minicart"/>
+        <c:if test="${not empty errorMessage}">
+            <%@ include file="../fragments/miniCart.jsp" %>
+        </c:if>
     </p>
 
-  <table>
-    <thead>
-      <tr>
-        <td>Image</td>
-        <td>Description</td>
-        <td class="">Price</td>
-        <td>Stock</td>
-      </tr>
-    </thead>
-    <tr>
-      	<td><img class="product-tile" src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${product.imageUrl}"></td>
-        <td>${product.description}</td>
-        <td class="price">
-            <fmt:formatNumber value="${product.price}" type="currency" currencySymbol="${product.currency.symbol}"/>
-        </td>
-        <td>${product.stock}</td>
-      </tr>
-  </table>
+    <table>
+        <thead>
+        <tr>
+            <td>Image</td>
+            <td>Description</td>
+            <td>Price</td>
+            <td>Stock</td>
+        </tr>
+        </thead>
+        <tr>
+            <td><img class="product-tile"
+                     src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${product.imageUrl}">
+            </td>
+            <td>${product.description}</td>
+            <td class="price">
+                <fmt:formatNumber value="${product.price}" type="currency" currencySymbol="${product.currency.symbol}"/>
+            </td>
+            <td>${product.stock}</td>
+        </tr>
+    </table>
 
-    <p>
-        <c:url value="/products/${product.id}" var="thisPage"/>
-        <form method="post" action="${thisPage}">
+
+    <c:url value="/products/${product.id}" var="thisPage"/>
+    <form method="post" action="${thisPage}">
+        <p>
             <c:if test="${not empty param.success}">
                 <span style="color: green">Successfully added</span>
                 <br>
@@ -42,8 +48,8 @@
                 <br>
                 <span style="color: red">${errorMessage}</span>
             </c:if>
-        </form>
-    </p>
+        </p>
+    </form>
 
     <tags:recentlyViewed products="${recentlyViewedProducts}"/>
 
