@@ -29,7 +29,9 @@ public class ArrayListOrderDaoTest {
     public void testSaveOrder() {
         String id = UUID.randomUUID().toString();
         when(order.getId()).thenReturn(id);
+
         orderDao.save(order);
+
         assertEquals(orderDao.getOrder(id), order);
     }
 
@@ -42,6 +44,7 @@ public class ArrayListOrderDaoTest {
     public void testSaveProductWithSameId() {
         String id = UUID.randomUUID().toString();
         when(order.getId()).thenReturn(id);
+
         orderDao.save(order);
         orderDao.save(order);
     }
@@ -50,6 +53,7 @@ public class ArrayListOrderDaoTest {
     public void testDeleteOrder() {
         String id = UUID.randomUUID().toString();
         when(order.getId()).thenReturn(id);
+
         orderDao.save(order);
         orderDao.delete(order);
         orderDao.getOrder(id);

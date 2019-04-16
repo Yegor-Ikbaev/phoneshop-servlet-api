@@ -44,8 +44,10 @@ public class DOSProtectionFilterTest {
     public void testDoFilterWithPositiveResult() throws IOException, ServletException {
         String ip = "3";
         when(request.getRemoteAddr()).thenReturn(ip);
+
         filter.init(filterConfig);
         filter.doFilter(request, response, chain);
+
         verify(chain).doFilter(request, response);
     }
 
@@ -56,8 +58,10 @@ public class DOSProtectionFilterTest {
         for (int i = 0; i < 20; i++) {
             protectionService.isAllowed(ip);
         }
+
         filter.init(filterConfig);
         filter.doFilter(request, response, chain);
+
         verify(chain, never()).doFilter(request, response);
     }
 }

@@ -3,6 +3,7 @@ package com.es.phoneshop.web;
 import com.es.phoneshop.model.cart.Cart;
 import com.es.phoneshop.model.cart.CartService;
 import com.es.phoneshop.model.cart.HttpSessionCartService;
+import com.es.phoneshop.model.cart.MiniCart;
 import com.es.phoneshop.model.exception.IllegalQuantityException;
 import com.es.phoneshop.model.exception.LackOfStockException;
 import com.es.phoneshop.model.product.ArrayListProductDao;
@@ -53,20 +54,24 @@ public class ProductDetailsPageServlet extends HttpServlet {
         try {
             quantity = Integer.parseInt(request.getParameter(QUANTITY_PARAMETER));
         } catch (NumberFormatException e) {
-            request.setAttribute("errorMessage", "Quantity should be a number");
-            request.setAttribute(QUANTITY_PARAMETER, request.getParameter(QUANTITY_PARAMETER));
-            doGet(request, response);
+            sendError("Quantity should be a number", request, response);
             return;
         }
         try {
             updateCart(request, quantity);
         } catch (IllegalQuantityException | LackOfStockException e) {
-            request.setAttribute("errorMessage", e.getMessage());
-            request.setAttribute(QUANTITY_PARAMETER, request.getParameter(QUANTITY_PARAMETER));
-            doGet(request, response);
+            sendError(e.getMessage(), request, response);
             return;
         }
         response.sendRedirect(request.getRequestURI() + "?success=true");
+    }
+
+    private void sendError(String message, HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        request.setAttribute("errorMessage", message);
+        request.setAttribute(QUANTITY_PARAMETER, request.getParameter(QUANTITY_PARAMETER));
+        request.setAttribute("miniCart", new MiniCart(cartService.getCart(request)));
+        doGet(request, response);
     }
 
     private void updateCart(HttpServletRequest request, int quantity)

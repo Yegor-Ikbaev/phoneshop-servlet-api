@@ -20,15 +20,18 @@ public class DOSProtectionServiceTest {
     @Test
     public void testPositiveResult() {
         String ip = "1";
+
         assertTrue(service.isAllowed(ip));
     }
 
     @Test
     public void testNegativeResult() {
         String ip = "2";
+
         for (int i = 0; i < 20; i++) {
             service.isAllowed(ip);
         }
+
         assertTrue(!service.isAllowed(ip));
     }
 }

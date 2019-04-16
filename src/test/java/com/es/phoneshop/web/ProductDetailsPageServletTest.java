@@ -48,6 +48,7 @@ public class ProductDetailsPageServletTest {
     @Before
     public void setup() {
         servlet = new ProductDetailsPageServlet();
+        servlet.init();
         when(request.getPathInfo()).thenReturn("/" + id);
         when(request.getRequestDispatcher(anyString())).thenReturn(requestDispatcher);
         when(request.getSession()).thenReturn(httpSession);
@@ -70,40 +71,44 @@ public class ProductDetailsPageServletTest {
 
     @Test
     public void testDoGet() throws ServletException, IOException {
-        servlet.init();
         servlet.doGet(request, response);
+
         verify(requestDispatcher).forward(request, response);
     }
 
     @Test
     public void testDoPost() throws IOException, ServletException {
         when(request.getParameter("quantity")).thenReturn("1");
-        servlet.init();
+
         servlet.doPost(request, response);
+
         verify(response).sendRedirect(anyString());
     }
 
     @Test
     public void testDoPostWithQuantityNotNumber() throws IOException, ServletException {
         when(request.getParameter("quantity")).thenReturn("symbol");
-        servlet.init();
+
         servlet.doPost(request, response);
+
         verify(requestDispatcher).forward(request, response);
     }
 
     @Test
     public void testDoPostWithNegativeQuantity() throws IOException, ServletException {
         when(request.getParameter("quantity")).thenReturn("-1");
-        servlet.init();
+
         servlet.doPost(request, response);
+
         verify(requestDispatcher).forward(request, response);
     }
 
     @Test
     public void testDoPostWithStockLessQuantity() throws IOException, ServletException {
         when(request.getParameter("quantity")).thenReturn("101");
-        servlet.init();
+
         servlet.doPost(request, response);
+
         verify(requestDispatcher).forward(request, response);
     }
 }

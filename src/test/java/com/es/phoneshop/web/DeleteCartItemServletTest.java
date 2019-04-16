@@ -43,6 +43,7 @@ public class DeleteCartItemServletTest {
     @Before
     public void setup(){
         servlet = new DeleteCartItemServlet();
+        servlet.init();
         when(request.getSession()).thenReturn(session);
         when(request.getRequestDispatcher(anyString())).thenReturn(dispatcher);
         when(request.getPathInfo()).thenReturn("/1");
@@ -51,8 +52,8 @@ public class DeleteCartItemServletTest {
 
     @Test
     public void testDoGet() throws ServletException, IOException {
-        servlet.init();
         servlet.doGet(request, response);
+
         verify(request).setAttribute(anyString(), any());
         verify(request.getRequestDispatcher(anyString())).forward(request, response);
     }
@@ -60,10 +61,12 @@ public class DeleteCartItemServletTest {
     @Test
     public void testDoPost() throws ServletException, IOException {
         ArrayListProductDao.getInstance().save(product);
-        servlet.init();
+
         servlet.doPost(request, response);
+
         verify(request).setAttribute(anyString(), any());
         verify(request.getRequestDispatcher(anyString())).forward(request, response);
+
         ArrayListProductDao.getInstance().delete(product.getId());
     }
 }

@@ -7,43 +7,22 @@ import java.util.List;
 
 public interface OrderService {
 
-    default DeliveryMode getDeliveryMode(String description) {
-        return getDeliveryModes().stream()
-                .filter(mode -> mode.getDescription().equalsIgnoreCase(description))
-                .findAny()
-                .orElseThrow(IllegalArgumentException::new);
-    }
+    DeliveryMode getDeliveryMode(String description);
 
-    default List<DeliveryMode> getDeliveryModes() {
-        return Arrays.asList(DeliveryMode.values());
-    }
+    List<DeliveryMode> getDeliveryModes();
 
-    default PaymentMethod getPaymentMethod(String description) {
-        return getPaymentMethods().stream()
-                .filter(mode -> mode.getDescription().equalsIgnoreCase(description))
-                .findAny()
-                .orElseThrow(IllegalArgumentException::new);
-    }
+    PaymentMethod getPaymentMethod(String description);
 
-    default List<PaymentMethod> getPaymentMethods() {
-        return Arrays.asList(PaymentMethod.values());
-    }
+    List<PaymentMethod> getPaymentMethods();
 
-    default DeliveryDate getDeliveryDate(String description) {
-        return getDeliveryDates().stream()
-                .filter(mode -> mode.getDescription().equalsIgnoreCase(description))
-                .findAny()
-                .orElseThrow(IllegalArgumentException::new);
-    }
+    DeliveryDate getDeliveryDate(String description);
 
-    default List<DeliveryDate> getDeliveryDates() {
-        return Arrays.asList(DeliveryDate.values());
-    }
+    List<DeliveryDate> getDeliveryDates();
 
-    Order createOrder(Cart cart);
+    Order createOrder(Cart cart, ContactDetails contactDetails,
+                      DeliveryDetails deliveryDetails, PaymentMethod paymentMethod);
 
-    void placeOrder(Order order, ContactDetails contactDetails,
-                    DeliveryDetails deliveryDetails, PaymentMethod paymentMethod);
+    void placeOrder(Order order, Cart cart);
 
     void calculatePrice(Order order);
 }

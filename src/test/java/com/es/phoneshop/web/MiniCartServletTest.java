@@ -46,6 +46,7 @@ public class MiniCartServletTest {
     public void testDoGet() throws ServletException, IOException {
         servlet.init();
         servlet.doGet(request, response);
+
         verify(request).setAttribute(anyString(), any());
         verify(request.getRequestDispatcher(anyString())).include(request, response);
     }

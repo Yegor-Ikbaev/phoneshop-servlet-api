@@ -50,6 +50,7 @@ public class CustomerMemoryServiceTest {
     @Test
     public void testUpdateWithoutExistingProduct() {
         customerMemoryService.update(storage, product);
+
         assertTrue(storage.getViewedProducts().contains(product));
     }
 
@@ -57,12 +58,14 @@ public class CustomerMemoryServiceTest {
     public void testUpdateWithExistingProduct() {
         customerMemoryService.update(storage, product);
         customerMemoryService.update(storage, product);
+
         assertEquals(1, storage.getViewedProducts().size());
     }
 
     @Test
     public void testGetRecentlyViewedProducts() {
         customerMemoryService.update(storage, product);
+
         assertTrue(!customerMemoryService.getRecentlyViewedProducts(storage).isEmpty());
     }
 }

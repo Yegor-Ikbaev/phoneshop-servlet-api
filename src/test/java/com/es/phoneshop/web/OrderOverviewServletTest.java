@@ -2,6 +2,7 @@ package com.es.phoneshop.web;
 
 import com.es.phoneshop.model.checkout.ArrayListOrderDao;
 import com.es.phoneshop.model.checkout.Order;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,11 +47,18 @@ public class OrderOverviewServletTest {
         when(order.getId()).thenReturn(id);
     }
 
+    @After
+    public void destroy() {
+        ArrayListOrderDao.getInstance().delete(order);
+    }
+
     @Test
     public void testDoGet() throws ServletException, IOException {
-        servlet.init();
         ArrayListOrderDao.getInstance().save(order);
+
+        servlet.init();
         servlet.doGet(request, response);
+
         verify(request).setAttribute("order", order);
         verify(request.getRequestDispatcher(anyString())).forward(request, response);
     }

@@ -16,5 +16,7 @@ public interface CartService {
 
     void delete(Cart cart, Product product);
 
+    void clear(Cart cart);
+
     void calculateTotalPrice(Cart cart);
 }

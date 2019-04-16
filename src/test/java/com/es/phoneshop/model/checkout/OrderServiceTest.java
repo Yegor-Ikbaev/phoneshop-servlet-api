@@ -43,17 +43,19 @@ public class OrderServiceTest {
 
     @Test
     public void testCreateOrder() {
-        assertNotNull(orderService.createOrder(cart));
+        Order order = orderService.createOrder(cart, contactDetails, deliveryDetails, PaymentMethod.CASH);
+
+        assertNotNull(order);
+        assertNotNull(order.getContactDetails());
+        assertNotNull(order.getDeliveryDetails());
+        assertNotNull(order.getPaymentMethod());
     }
 
     @Test
     public void testPlaceOrder() {
-        orderService.placeOrder(order, contactDetails, deliveryDetails, PaymentMethod.CASH);
+        orderService.placeOrder(order, cart);
+
         verify(order).setId(anyString());
-        verify(order).setContactDetails(contactDetails);
-        verify(order).setDeliveryDetails(deliveryDetails);
-        verify(order).setPaymentMethod(PaymentMethod.CASH);
         verify(order).setTotalPrice(BigDecimal.ZERO);
     }
-
 }

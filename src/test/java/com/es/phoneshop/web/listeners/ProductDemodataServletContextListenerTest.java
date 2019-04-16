@@ -29,8 +29,10 @@ public class ProductDemodataServletContextListenerTest {
     @Test
     public void testCallMethods() {
         ProductDao productDao = ArrayListProductDao.getInstance();
+
         listener.contextInitialized(servletContextEvent);
         listener.contextDestroyed(servletContextEvent);
+
         assertTrue(!productDao.findProducts().isEmpty());
     }
 }

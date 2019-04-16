@@ -61,9 +61,10 @@ public class CheckoutPageServlet extends HttpServlet {
         Optional<DeliveryDetails> optionalDeliveryDetails = getDeliveryDetailsFromRequest(request);
         PaymentMethod paymentMethod = getPaymentMethodFormRequest(request);
         if (optionalContactDetails.isPresent() && optionalDeliveryDetails.isPresent()) {
-            Order order = orderService.createOrder(cartService.getCart(request));
-            orderService.placeOrder(order, optionalContactDetails.get(),
+            Cart cart = cartService.getCart(request);
+            Order order = orderService.createOrder(cart, optionalContactDetails.get(),
                     optionalDeliveryDetails.get(), paymentMethod);
+            orderService.placeOrder(order, cart);
             return Optional.of(order);
         } else {
             return Optional.empty();
@@ -92,7 +93,7 @@ public class CheckoutPageServlet extends HttpServlet {
         String phone = request.getParameter(PHONE_PARAMETER);
         if (isIncorrect(phone) || !CheckoutUtil.isValidPhone(phone)) {
             isSuccessful = false;
-            request.setAttribute("phoneError", "Incorrect phone");
+            request.setAttribute("phoneError", "Phone number should contain symbol '+' and 12 digits");
         }
         if (isSuccessful) {
             return Optional.of(new ContactDetails(firstName, lastName, phone));

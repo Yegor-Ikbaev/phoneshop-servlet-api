@@ -12,6 +12,9 @@ public class DeliveryDetails {
 
     private String address;
 
+    public DeliveryDetails(){
+    }
+
     public DeliveryDetails(DeliveryMode mode, DeliveryDate date, String address) {
         this.mode = mode;
         this.date = date;

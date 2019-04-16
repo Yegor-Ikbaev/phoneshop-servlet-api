@@ -1,7 +1,9 @@
 package com.es.phoneshop.web;
 
+import com.es.phoneshop.model.exception.ProductNotFoundException;
 import com.es.phoneshop.model.product.ArrayListProductDao;
 import com.es.phoneshop.model.product.Product;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,6 +43,7 @@ public class CartPageServletTest {
     @Before
     public void setup(){
         servlet = new CartPageServlet();
+        servlet.init();
         String[] productIds = {"1", "1", "1"};
         when(request.getParameterValues("productId")).thenReturn(productIds);
         when(request.getRequestDispatcher(anyString())).thenReturn(requestDispatcher);
@@ -49,34 +52,42 @@ public class CartPageServletTest {
         when(product.getId()).thenReturn((long) 1);
     }
 
+    @After
+    public void destroy() {
+        try{
+            ArrayListProductDao.getInstance().delete(product.getId());
+        } catch (ProductNotFoundException e){
+        }
+    }
+
     @Test
     public void testDoGet() throws ServletException, IOException {
-        servlet.init();
         servlet.doGet(request, response);
+
         verify(request).setAttribute(anyString(), any());
         verify(request.getRequestDispatcher(anyString())).forward(request, response);
     }
 
     @Test
     public void testDoPostSuccessful() throws IOException, ServletException {
-        servlet.init();
         ArrayListProductDao.getInstance().save(product);
         String[] quantities = {"1", "1", "1"};
         when(request.getParameterValues("quantity")).thenReturn(quantities);
+
         servlet.doPost(request, response);
+
         verify(response).sendRedirect(anyString());
-        ArrayListProductDao.getInstance().delete(product.getId());
     }
 
     @Test
     public void testDoPostUnsuccessful() throws ServletException, IOException {
-        servlet.init();
         ArrayListProductDao.getInstance().save(product);
         String[] quantities = {"-1", "not a number", "100"};
         when(request.getParameterValues("quantity")).thenReturn(quantities);
+
         servlet.doPost(request, response);
+
         verify(request, times(4)).setAttribute(anyString(), any());
         verify(request.getRequestDispatcher(anyString())).forward(request, response);
-        ArrayListProductDao.getInstance().delete(product.getId());
     }
 }

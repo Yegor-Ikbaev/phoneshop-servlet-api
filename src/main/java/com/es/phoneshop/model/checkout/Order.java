@@ -1,17 +1,16 @@
 package com.es.phoneshop.model.checkout;
 
-import com.es.phoneshop.model.cart.Cart;
 import com.es.phoneshop.model.cart.CartItem;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Order {
 
     private String id;
 
-    private List<CartItem> cartItems;
+    private List<CartItem> cartItems = new ArrayList<>();
 
     private ContactDetails contactDetails;
 
@@ -19,16 +18,9 @@ public class Order {
 
     private PaymentMethod paymentMethod;
 
-    private BigDecimal priceOfProducts;
+    private BigDecimal priceOfProducts = BigDecimal.ZERO;
 
-    private BigDecimal totalPrice;
-
-    public Order(Cart cart) {
-        cartItems = cart.getCartItems().stream()
-                .map(CartItem::new)
-                .collect(Collectors.toList());
-        priceOfProducts = cart.getTotalPrice();
-    }
+    private BigDecimal totalPrice = BigDecimal.ZERO;
 
     public String getId() {
         return id;

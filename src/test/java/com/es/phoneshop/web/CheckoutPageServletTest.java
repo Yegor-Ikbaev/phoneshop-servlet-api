@@ -45,6 +45,7 @@ public class CheckoutPageServletTest {
     @Before
     public void setup() {
         servlet = new CheckoutPageServlet();
+        servlet.init();
         when(request.getRequestDispatcher(anyString())).thenReturn(requestDispatcher);
         when(request.getSession()).thenReturn(httpSession);
         when(request.getParameter("paymentMethod")).thenReturn("Card");
@@ -55,16 +56,16 @@ public class CheckoutPageServletTest {
 
     @Test
     public void testDoGet() throws ServletException, IOException {
-        servlet.init();
         servlet.doGet(request, response);
+
         verify(request, times(4)).setAttribute(anyString(), any());
         verify(requestDispatcher).forward(request, response);
     }
 
     @Test
     public void testDoPostIncorrectData() throws ServletException, IOException {
-        servlet.init();
         servlet.doPost(request, response);
+
         verify(request, times(12)).setAttribute(anyString(), any());
         verify(requestDispatcher).forward(request, response);
     }
@@ -75,8 +76,9 @@ public class CheckoutPageServletTest {
         when(request.getParameter(LAST_NAME_PARAMETER)).thenReturn(LAST_NAME_PARAMETER);
         when(request.getParameter(PHONE_PARAMETER)).thenReturn("+123456789012");
         when(request.getParameter(ADDRESS_PARAMETER)).thenReturn(ADDRESS_PARAMETER);
-        servlet.init();
+
         servlet.doPost(request, response);
+
         verify(response).sendRedirect(anyString());
     }
 

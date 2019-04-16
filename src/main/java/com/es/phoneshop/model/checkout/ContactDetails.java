@@ -8,6 +8,9 @@ public class ContactDetails {
 
     private String phone;
 
+    public ContactDetails(){
+    }
+
     public ContactDetails(String firstName, String lastName, String phone) {
         this.firstName = firstName;
         this.lastName = lastName;
