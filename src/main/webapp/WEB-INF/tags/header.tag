@@ -13,4 +13,8 @@
 		<a href="${cartUrl}">
 			Cart
 		</a>
+		<c:url value="/reviewes" var="reviewesUrl"/>
+		<a href="${reviewesUrl}">
+			Product reviewes
+		</a>
 	</header>	

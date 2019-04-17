@@ -75,6 +75,31 @@
         <url-pattern>/order/overview/*</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>productReview</servlet-name>
+        <servlet-class>com.es.phoneshop.web.ProductReviewServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>productReview</servlet-name>
+        <url-pattern>/review/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>approveProductReview</servlet-name>
+        <servlet-class>com.es.phoneshop.web.ApproveProductReviewServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>approveProductReview</servlet-name>
+        <url-pattern>/reviewes</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>approveProductReview</servlet-name>
+        <url-pattern>/reviewes/approve/*</url-pattern>
+    </servlet-mapping>
+
     <filter>
         <filter-name>dosProtectionFilter</filter-name>
         <filter-class>com.es.phoneshop.web.filters.DOSProtectionFilter</filter-class>

@@ -9,6 +9,7 @@ import com.es.phoneshop.model.exception.LackOfStockException;
 import com.es.phoneshop.model.product.ArrayListProductDao;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.ProductDao;
+import com.es.phoneshop.model.productReview.ProductReviewServiceImpl;
 import com.es.phoneshop.model.storage.CustomerMemoryService;
 import com.es.phoneshop.model.storage.HttpSessionCustomerMemory;
 import com.es.phoneshop.model.storage.Storage;
@@ -43,6 +44,7 @@ public class ProductDetailsPageServlet extends HttpServlet {
         Storage storage = customerMemoryService.getStorage(request);
         request.setAttribute("product", product);
         request.setAttribute("recentlyViewedProducts", customerMemoryService.getRecentlyViewedProducts(storage));
+        request.setAttribute("reviewes", ProductReviewServiceImpl.getInstance().getProductReviews(product));
         customerMemoryService.update(storage, product);
         request.getRequestDispatcher("/WEB-INF/pages/productDetails.jsp").forward(request, response);
     }
