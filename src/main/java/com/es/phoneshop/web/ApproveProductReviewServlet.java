@@ -23,7 +23,7 @@ public class ApproveProductReviewServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.setAttribute("reviewes", productReviewDao.getProductReviews());
+        request.setAttribute("reviewes", productReviewDao.getUnapprovedProductReviews());
         request.getRequestDispatcher("/WEB-INF/pages/productReviewes.jsp").forward(request, response);
     }
 

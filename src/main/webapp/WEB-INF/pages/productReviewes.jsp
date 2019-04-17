@@ -8,6 +8,9 @@
         <thead>
         <tr>
             <td>
+                Product
+            </td>
+            <td>
                 Username
             </td>
             <td>
@@ -23,6 +26,9 @@
         </thead>
         <c:forEach var="review" items="${reviewes}">
             <tr>
+                <td>
+                        ${review.product.description}
+                </td>
                 <td>
                         ${review.userName}
                 </td>

@@ -21,7 +21,7 @@ public class ArrayListProductReviewDao implements ProductReviewDao {
         return productReviews.stream()
                 .filter(productReview -> productReview.getId().equals(id))
                 .findAny()
-                .get();
+                .orElseThrow(() -> new IllegalArgumentException("There is no review with id = " + id));
     }
 
     @Override
@@ -30,7 +30,7 @@ public class ArrayListProductReviewDao implements ProductReviewDao {
     }
 
     @Override
-    public List<ProductReview> getProductReviews(Product product) {
+    public List<ProductReview> getApprovedProductReviews(Product product) {
         return productReviews.stream()
                 .filter(productReview -> productReview.getProduct().equals(product))
                 .filter(ProductReview::isApproved)
@@ -38,7 +38,7 @@ public class ArrayListProductReviewDao implements ProductReviewDao {
     }
 
     @Override
-    public List<ProductReview> getProductReviews() {
+    public List<ProductReview> getUnapprovedProductReviews() {
          return productReviews.stream()
                 .filter(productReview -> !productReview.isApproved())
                 .collect(Collectors.toList());

@@ -16,7 +16,7 @@ public class ProductReviewServiceImpl implements ProductReviewService {
 
     @Override
     public List<ProductReview> getProductReviews(Product product) {
-        return ArrayListProductReviewDao.getInstance().getProductReviews(product).stream()
+        return ArrayListProductReviewDao.getInstance().getApprovedProductReviews(product).stream()
                 .filter(ProductReview::isApproved)
                 .collect(Collectors.toList());
     }

@@ -10,7 +10,7 @@ public interface ProductReviewDao {
 
     void save(ProductReview productReview);
 
-    List<ProductReview> getProductReviews(Product product);
+    List<ProductReview> getApprovedProductReviews(Product product);
 
-    List<ProductReview> getProductReviews();
+    List<ProductReview> getUnapprovedProductReviews();
 }
